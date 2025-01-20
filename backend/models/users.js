@@ -12,10 +12,10 @@ const User = sequelize.define(
     },
     user_uid: {
       type: DataTypes.UUID,
+      unique: true,
     },
     name: {
       type: DataTypes.TEXT,
-      unique: true,
     },
     role: {
       type: DataTypes.TEXT,

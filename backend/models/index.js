@@ -3,6 +3,7 @@ const { sequelize } = require("../connection");
 
 const { Auth } = require("./auths");
 const { User } = require("./users");
+const { User_info } = require("./user_info");
 
 require("./associations"); // Import the associations after models are loaded
 

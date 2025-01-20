@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar color="primary">
-      <v-toolbar-title>TrainingPerformance</v-toolbar-title>
+      <v-toolbar-title>WorkoutNotepad</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
