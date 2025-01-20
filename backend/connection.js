@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize('postgres://postgres:postgres@localhost:5432/db_ultralive');
+const sequelize = new Sequelize('postgres://postgres:postgres@localhost:5432/training_performance_db');
 
 async function connect() {
     try {

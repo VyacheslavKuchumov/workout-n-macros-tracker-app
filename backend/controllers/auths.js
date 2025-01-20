@@ -1,5 +1,5 @@
-const { auth } = require('../models/auths')
-const { user } = require('../models/users')
+const { Auth } = require('../models/auths')
+const { User } = require('../models/users')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
@@ -14,15 +14,16 @@ createRefresh = (uid) => createToken(uid, REFRESH_LIFETIME)
 
 exports.signup = async (req, res) => {
     try {
-        const authed = await auth.create({
-            email: req.body.email.toLowerCase(),         
-            password: bcrypt.hashSync(req.body.password, 8),
+        const { email, password, name } = req.body
+        const authed = await Auth.create({
+            email: email.toLowerCase(),         
+            password: bcrypt.hashSync(password, 8),
             auth_uid: uuidv4(),
 
         })
-        const cur_user = await user.create({
+        const cur_user = await User.create({
             user_uid: authed.auth_uid,
-            name: req.body.name,
+            name: name,
             role: 'user',            
         })
         return res.status(201).send({ message: 'registered', uid: cur_user.user_uid })
@@ -34,9 +35,10 @@ exports.signup = async (req, res) => {
 }
 exports.signin = async (req, res) => {
     try {
-        const authed = await auth.findOne({
+        const email = req.body.email.toLowerCase()
+        const authed = await Auth.findOne({
             where: {
-                email: req.body.email.toLowerCase()
+                email: email
             }
         })
         if (!authed) return res.status(404).send({ message: 'User not found' })
@@ -44,7 +46,7 @@ exports.signin = async (req, res) => {
         if (!passwordIsValid) return res.status(414).send({ message: 'Pass is not valid' })
         const token = createAccess(authed.auth_uid)
         const token_refresh = createRefresh(authed.auth_uid)
-        await auth.update({ AccessToken: token, RefreshToken: token_refresh }, { where: { auth_uid: authed.auth_uid } })
+        await Auth.update({ AccessToken: token, RefreshToken: token_refresh }, { where: { auth_uid: authed.auth_uid } })
         
         return res.status(200).send({
             auth_uid: authed.auth_uid,
@@ -60,12 +62,12 @@ exports.changeAccess = async (req, res) => {
     let token_refresh = req.body.headers['x-refresh-token']
     try {
         const { uid } = jwt.verify(token_refresh, secret)
-        const authed = await auth.findOne({where: { auth_uid: uid }})
+        const authed = await Auth.findOne({where: { auth_uid: uid }})
         if (!authed) return res.status(404).send({ message: 'User not found' })
         // if (token_refresh != user['RefreshToken']) return res.status(403).send({ message: 'Unauthorized' })
         let token = createAccess(authed.auth_uid)
         token_refresh = createRefresh(authed.auth_uid)
-        await auth.update({ AccessToken: token, RefreshToken: token_refresh },
+        await Auth.update({ AccessToken: token, RefreshToken: token_refresh },
             { where: { auth_uid: authed.auth_uid } })
         return res.status(200).send({
             accessToken: token,

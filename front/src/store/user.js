@@ -15,19 +15,7 @@ export default {
     },
   },
   actions: {
-    async getAllUserNames({ commit }) {
-      try {
-        const response = await instance.get(`/api/users`);
 
-        if (response) {
-          const names = response.data.map(({ name }) => name);
-          console.log(names);
-          return commit("setUserNames", names);
-        }
-      } catch (error) {
-        console.error("Error fetching all users:", error);
-      }
-    },
     async getUserByUid({ commit }) {
       const uid = localStorage.getItem("uid");
       const user = await instance.get(`/api/users/${uid}`);

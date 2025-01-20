@@ -1,18 +1,17 @@
 <template>
   <v-app>
     <v-app-bar color="primary">
-      <v-toolbar-title>UltraliveDatabase</v-toolbar-title>
+      <v-toolbar-title>TrainingPerformance</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <v-btn v-if="isAuth" text to="/">Главная</v-btn>
-      <v-btn v-if="isAuth" text to="/drafts">Шаблоны</v-btn>
+      
+      <v-btn v-if="isAuth" text to="/training">Тренировки</v-btn>
+      <v-btn v-if="isAuth" text to="/exercise">Упражнения</v-btn>
+      <v-btn v-if="isAuth" text to="/statistics">Статистика</v-btn>
+      <v-btn v-if="isAuth" text to="/profile">Профиль</v-btn>
 
-      <v-btn v-if="isAuth" text to="/equipment_sets"
-        >Комплекты оборудования</v-btn
-      >
-
-      <v-btn v-if="isAuth" text to="/projects">Съёмки</v-btn>
       <v-btn v-if="isAuth" @click="logout()">Выйти</v-btn>
     </v-app-bar>
     <v-main>
@@ -26,11 +25,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 export default {
-  data() {
-    return {
-      username: null,
-    };
-  },
+  
   methods: {
     ...mapActions({
       logout: "auth/logout",
@@ -51,4 +46,4 @@ export default {
 };
 </script>
 
-<style></style>
+

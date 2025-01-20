@@ -1,7 +1,7 @@
 const {sequelize} = require('../connection')
 const {DataTypes} = require('sequelize')
 
-const auth = sequelize.define(
+const Auth = sequelize.define(
     'auth',
     {
         id: {
@@ -28,14 +28,11 @@ const auth = sequelize.define(
         },
     },
     {
-        tableName: 'auths',
+        tableName: 'Auths',
         timestamps: true,
     }
 )
-async function get_auth_table(){
-    await auth.sync()
-    console.log('Синхрон auths 👍');
-}
 
-module.exports = {auth, get_auth_table}
+
+module.exports = {Auth}
 
