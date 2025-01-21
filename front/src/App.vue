@@ -1,19 +1,42 @@
 <template>
   <v-app>
+    
     <v-app-bar color="primary">
       <v-toolbar-title>WorkoutNotepad</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-btn v-if="isAuth" text to="/">Главная</v-btn>
-      
-      <v-btn v-if="isAuth" text to="/training">Тренировки</v-btn>
-      <v-btn v-if="isAuth" text to="/exercise">Упражнения</v-btn>
-      <v-btn v-if="isAuth" text to="/statistics">Статистика</v-btn>
-      <v-btn v-if="isAuth" text to="/profile">Профиль</v-btn>
-
-      <v-btn v-if="isAuth" @click="logout()">Выйти</v-btn>
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
     </v-app-bar>
+    <v-navigation-drawer
+      v-model="drawer"
+      location="right"
+      app
+      temporary
+    >
+      <v-list>
+        <v-list-item-group>
+          <v-list-item v-if="isAuth" to="/">
+            <v-list-item-title>Главная</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="isAuth" to="/training">
+            <v-list-item-title>Тренировки</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="isAuth" to="/exercise">
+            <v-list-item-title>Упражнения</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="isAuth" to="/statistics">
+            <v-list-item-title>Статистика</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="isAuth" to="/profile">
+            <v-list-item-title>Профиль</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="isAuth" @click="logout()">
+            <v-list-item-title>Выйти</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
     <v-main>
       <v-container>
         <router-view />
@@ -25,6 +48,11 @@
 <script>
 import { mapActions, mapState } from "vuex";
 export default {
+  data() {
+    return {
+      drawer: false, // State for navigation drawer
+    };
+  },
   
   methods: {
     ...mapActions({

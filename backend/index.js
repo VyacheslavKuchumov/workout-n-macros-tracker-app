@@ -13,7 +13,7 @@ const users_routes = require("./routes/users");
 
 app.use(
   cors({
-    origin: ["http://localhost:8080", "http://45.43.88.192"],
+    origin: ["http://localhost:8080", "http://45.43.88.192", "http://vyachik.ru"],
   }),
 );
 

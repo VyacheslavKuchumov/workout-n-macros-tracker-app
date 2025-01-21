@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="user()" class="mx-auto" prepend-icon="mdi-account" width="400">
+  <v-card v-if="user()" class="mx-auto" prepend-icon="mdi-account" max-width="400">
     <template v-slot:title>
       <span class="font-black">Пользователь {{ user().name }}</span>
     </template>
