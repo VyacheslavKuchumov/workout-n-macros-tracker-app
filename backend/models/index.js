@@ -3,7 +3,10 @@ const { sequelize } = require("../connection");
 
 const { Auth } = require("./auths");
 const { User } = require("./users");
-const { User_info } = require("./user_info");
+const { UserInfo } = require("./user_info");
+const { Workout } = require("./workouts");
+const { Exercise } = require("./exercises");
+const { ExercisesInWorkout } = require("./exercises_in_workout");
 
 require("./associations"); // Import the associations after models are loaded
 

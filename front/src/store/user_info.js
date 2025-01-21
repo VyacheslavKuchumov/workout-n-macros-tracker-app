@@ -1,5 +1,5 @@
 import instance from "@/middlewares";
-import user from "./user";
+
 
 export default {
   name: "user_info",

@@ -2,7 +2,7 @@ const { sequelize } = require("../connection");
 const { DataTypes } = require("sequelize");
 
 
-const User_info = sequelize.define(
+const UserInfo = sequelize.define(
   "user_info",
   {
     
@@ -27,11 +27,11 @@ const User_info = sequelize.define(
     },
   },
   {
-    tableName: "User_info",
+    tableName: "UserInfo",
     timestamps: false,
   },
 );
 
 
 
-module.exports = { User_info};
+module.exports = { UserInfo};

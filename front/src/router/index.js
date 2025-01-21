@@ -6,7 +6,7 @@ import HomeView from "@/views/HomeView.vue";
 import Register from "@/views/Auth/Register.vue";
 import Login from "@/views/Auth/Login.vue";
 import ProfileView from "@/views/ProfileView.vue";
-
+import ExercisesView from "@/views/Training/ExercisesView.vue";
 
 
 
@@ -31,6 +31,12 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: ProfileView,
+    meta: { auth: true },
+  },
+  {
+    path: "/exercises",
+    name: "exercises",
+    component: ExercisesView,
     meta: { auth: true },
   }
 ];

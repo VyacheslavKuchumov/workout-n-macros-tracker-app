@@ -10,6 +10,8 @@ const port = process.env.PORT;
 const auth_routes = require("./routes/auth");
 const users_routes = require("./routes/users");
 const user_info_routes = require("./routes/user_info");
+const exercises_routes = require("./routes/exercises");
+const workouts_routes = require("./routes/workouts");
 
 
 app.use(
@@ -21,6 +23,8 @@ app.use(
 app.use("/api/auth", auth_routes);
 app.use("/api/users", users_routes);
 app.use("/api/user_info", user_info_routes);
+app.use("/api/exercises", exercises_routes);
+app.use("/api/workouts", workouts_routes);
 
 
 
@@ -34,7 +38,7 @@ const { initializeDatabase } = require("./models/index");
 
 app.listen(port, () => {
   //###############################
-  // initializeDatabase();
+  initializeDatabase();
   //###############################
   console.log(`server started on port ${port}`);
 });
