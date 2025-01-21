@@ -20,15 +20,15 @@ const ExercisesInWorkout = sequelize.define(
     },
     weight: {
         type: DataTypes.FLOAT,
-        allowNull: false,
+
     },
     reps: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+
     },
     set: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+
     },
 
   },

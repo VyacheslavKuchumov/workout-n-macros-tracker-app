@@ -15,7 +15,7 @@ const getWorkouts = async (req, res) => {
 const createWorkout = async (req, res) => {
     try {
         const { workout_name, workout_date, user_uid } = req.body
-        const workout = await Workout.create({ workout_name, workout_description, workout_date, user_uid })
+        const workout = await Workout.create({ workout_name, workout_date, user_uid })
         res.status(201).json(workout)
     } catch (error) {
         res.status(500).json({ error: error.message })
@@ -28,7 +28,7 @@ const updateWorkout = async (req, res) => {
         const { workout_id, workout_name, workout_date, user_uid } = req.body
         const workout = await Workout.findByPk(workout_id)
         if (!workout) return res.status(404).send({ message: 'Workout not found' })
-        await workout.update({ workout_name, workout_description, workout_date, user_uid })
+        await workout.update({ workout_name, workout_date, user_uid })
         return res.status(200).send({ message: 'updated' })
     } catch (error) {
         return res.status(500).send({ message: error.message })

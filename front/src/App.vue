@@ -19,7 +19,7 @@
           <v-list-item v-if="isAuth" to="/">
             <v-list-item-title>Главная</v-list-item-title>
           </v-list-item>
-          <v-list-item v-if="isAuth" to="/training">
+          <v-list-item v-if="isAuth" to="/workouts">
             <v-list-item-title>Тренировки</v-list-item-title>
           </v-list-item>
           <v-list-item v-if="isAuth" to="/exercises">
