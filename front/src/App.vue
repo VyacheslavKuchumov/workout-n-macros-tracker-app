@@ -15,7 +15,7 @@
       temporary
     >
       <v-list>
-        <v-list-item-group>
+        
           <v-list-item v-if="isAuth" to="/">
             <v-list-item-title>Главная</v-list-item-title>
           </v-list-item>
@@ -34,7 +34,7 @@
           <v-list-item v-if="isAuth" @click="logout()">
             <v-list-item-title>Выйти</v-list-item-title>
           </v-list-item>
-        </v-list-item-group>
+        
       </v-list>
     </v-navigation-drawer>
     <v-main>

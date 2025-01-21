@@ -8,6 +8,7 @@ import Login from "@/views/Auth/Login.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import ExercisesView from "@/views/Training/ExercisesView.vue";
 import WorkoutView from "@/views/Training/WorkoutView.vue";
+import ExercisesInWorkoutView from "@/views/Training/ExercisesInWorkoutView.vue";
 
 
 
@@ -46,6 +47,12 @@ const routes = [
     component: WorkoutView,
     meta: { auth: true },
   },
+  {
+    path: "/workout/:id",
+    name: "exercises-in-workout",
+    component: ExercisesInWorkoutView,
+    meta: { auth: true },
+  }
 ];
 
 const router = createRouter({

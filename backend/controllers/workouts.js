@@ -1,9 +1,26 @@
 const { Workout } = require('../models/workouts')
 
+function russianToIsoDate(russianDate) {
+    // Check if the input is a valid Russian date string
+    if (!russianDate || typeof russianDate !== "string") {
+        throw new Error("Invalid input. Please provide a valid Russian date string.");
+    }
+
+    // Split the Russian date string into parts
+    const [day, month, year] = russianDate.split(".");
+
+    // Validate the extracted values
+    if (!day || !month || !year || isNaN(Date.parse(`${year}-${month}-${day}`))) {
+        throw new Error("Invalid Russian date format.");
+    }
+
+    // Return the date in ISO format
+    return `${year}-${month}-${day}`;
+}
 // get all workouts
 const getWorkouts = async (req, res) => {
     try {
-        const workouts = await Workout.findAll()
+        const workouts = await Workout.findAll({order: [['workout_date', 'DESC']],})
         res.status(200).json(workouts)
     } catch (error) {
         res.status(500).json({ error: error.message })
@@ -15,7 +32,7 @@ const getWorkouts = async (req, res) => {
 const createWorkout = async (req, res) => {
     try {
         const { workout_name, workout_date, user_uid } = req.body
-        const workout = await Workout.create({ workout_name, workout_date, user_uid })
+        const workout = await Workout.create({ workout_name, user_uid,  workout_date: russianToIsoDate(workout_date)})
         res.status(201).json(workout)
     } catch (error) {
         res.status(500).json({ error: error.message })
@@ -28,7 +45,7 @@ const updateWorkout = async (req, res) => {
         const { workout_id, workout_name, workout_date, user_uid } = req.body
         const workout = await Workout.findByPk(workout_id)
         if (!workout) return res.status(404).send({ message: 'Workout not found' })
-        await workout.update({ workout_name, workout_date, user_uid })
+        await workout.update({ workout_name, workout_date: russianToIsoDate(workout_date), user_uid })
         return res.status(200).send({ message: 'updated' })
     } catch (error) {
         return res.status(500).send({ message: error.message })

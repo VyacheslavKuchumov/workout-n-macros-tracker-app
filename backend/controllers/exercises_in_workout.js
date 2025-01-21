@@ -4,7 +4,8 @@ const { ExercisesInWorkout } = require('../models/exercises_in_workout')
 // get all exercises in workout
 const getExercisesInWorkout = async (req, res) => {
     try {
-        const exercises_in_workout = await ExercisesInWorkout.findAll()
+        const workout_id = req.params?.id
+        const exercises_in_workout = await ExercisesInWorkout.findAll({where: {workout_id}})
         res.json(exercises_in_workout)
     } catch (error) {
         res.status(500).json({ error: error.message })

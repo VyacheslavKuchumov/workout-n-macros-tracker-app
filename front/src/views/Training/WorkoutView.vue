@@ -55,14 +55,33 @@
             <v-text-field
               v-model="workoutForm.workout_name"
               label="Название"
+              clearable
               :rules="[rules.required]"
             ></v-text-field>
             
             <v-text-field
-              v-model="workoutForm.workout_date"
-              label="Дата тренировки"
-              :rules="[rules.required]"
-            ></v-text-field>
+                v-model="workoutForm.workout_date"
+                label="Дата тренировки"
+                prepend-icon="mdi-calendar"
+                @click="dateDialog = true"
+                readonly
+                clearable
+                :rules="[rules.required]"
+              />
+              <v-dialog v-model="dateDialog" max-width="400px">
+                <v-card>
+                  <v-date-picker v-model="datePickerDate" />
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="dateDialog = false"
+                      >Закрыть</v-btn
+                    >
+                    <v-btn text color="primary" @click="updateDate"
+                      >OK</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -97,6 +116,8 @@
   export default {
     data() {
       return {
+        dateDialog: false,
+        datePickerDate: new Date().toISOString().substr(0, 10),
         search: "",
         confirmDeleteDialog: false,
         editDialog: false,
@@ -117,7 +138,7 @@
         return [
           { title: "Название", key: "workout_name" },
           
-          { title: "Дата", key: "workout_date" },
+          { title: "Дата", key: "workout_date", value: item => `${this.isoToRussianDate(item.workout_date) }`,},
           { title: "", key: "action_see_exercises", sortable: false },
           { title: "", key: "action_edit", sortable: false },
           { title: "", key: "action_delete", sortable: false },
@@ -125,60 +146,88 @@
       },
     },
     methods: {
-      ...mapActions({
-        getWorkouts: "workouts/getWorkouts",
-        createWorkout: "workouts/createWorkout",
-        updateWorkout: "workouts/updateWorkout",
-        deleteWorkout: "workouts/deleteWorkout",
-      }),
+        ...mapActions({
+            getWorkouts: "workouts/getWorkouts",
+            createWorkout: "workouts/createWorkout",
+            updateWorkout: "workouts/updateWorkout",
+            deleteWorkout: "workouts/deleteWorkout",
+        }),
+    
+        workouts() {
+            return this.$store.state.workouts.data;
+        },
   
-      workouts() {
-        return this.$store.state.workouts.data;
-      },
-      openCreateDialog() {
-        this.editingWorkout = null;
-        this.workoutForm = { workout_name: "", workout_date: "" };
-        this.editDialog = true;
-      },
-      openEditDialog(item) {
-        this.editingWorkout = item;
-        this.workoutForm = { ...item };
-        this.editDialog = true;
-      },
-      closeEditDialog() {
-        this.editDialog = false;
-        this.workoutForm = { workout_name: "", workout_date: "" };
-      },
-      async saveWorkout() {
-        const workoutData = { ...this.workoutForm };
-        if (this.editingWorkout) {
-          workoutData.workout_id = this.editingWorkout.workout_id;
-          await this.updateWorkout(workoutData);
-          await this.getWorkouts();
-        } else {
-          await this.createWorkout(workoutData);
-          await this.getWorkouts();
-        }
-        this.closeEditDialog();
-      },
-      confirmDelete(item) {
-        this.workoutToDelete = item;
-        this.confirmDeleteDialog = true;
-      },
-      closeConfirmDialog() {
-        this.confirmDeleteDialog = false;
-        this.workoutToDelete = null;
-      },
-      async deleteConfirmed() {
-        if (this.workoutToDelete) {
-          await this.deleteWorkout(this.workoutToDelete.workout_id);
-          await this.getWorkouts();
-          this.closeConfirmDialog();
-        }
-      },
+        isoToRussianDate(isoDate) {
+            // Check if the input is a valid ISO date
+            if (!isoDate || typeof isoDate !== "string") {
+                throw new Error("Invalid input. Please provide a valid ISO date string.");
+            }
+
+            // Split the ISO date string into parts
+            const [year, month, day] = isoDate.split("-");
+            
+            // Validate the extracted values
+            if (!year || !month || !day || isNaN(Date.parse(isoDate))) {
+                throw new Error("Invalid ISO date format.");
+            }
+
+            // Return the date in Russian format
+            return `${day}.${month}.${year}`;
+        },
+        
+        updateDate() {
+            const date = new Date(this.datePickerDate);
+            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            this.workoutForm.workout_date = this.isoToRussianDate(date.toISOString().split("T")[0]);
+            this.dateDialog = false;
+            },
+        openCreateDialog() {
+            this.editingWorkout = null;
+            this.workoutForm = { workout_name: "", workout_date: "" };
+            this.editDialog = true;
+        },
+        openEditDialog(item) {
+            this.editingWorkout = item;
+            this.workoutForm = { workout_name: item.workout_name, workout_date: this.isoToRussianDate(item.workout_date) };
+            this.editDialog = true;
+        },
+        closeEditDialog() {
+            this.editDialog = false;
+            this.workoutForm = { workout_name: "", workout_date: "" };
+        },
+        async saveWorkout() {
+            const workoutData = { ...this.workoutForm };
+            if (this.editingWorkout) {
+                workoutData.workout_id = this.editingWorkout.workout_id;
+                await this.updateWorkout(workoutData);
+                await this.getWorkouts();
+            } else {
+                await this.createWorkout(workoutData);
+                await this.getWorkouts();
+            }
+            this.closeEditDialog();
+        },
+        confirmDelete(item) {
+            this.workoutToDelete = item;
+            this.confirmDeleteDialog = true;
+        },
+        closeConfirmDialog() {
+            this.confirmDeleteDialog = false;
+            this.workoutToDelete = null;
+        },
+        async deleteConfirmed() {
+            if (this.workoutToDelete) {
+            await this.deleteWorkout(this.workoutToDelete.workout_id);
+            await this.getWorkouts();
+            this.closeConfirmDialog();
+            }
+        },
+        seeExercises(item) {
+            this.$router.push(`/workout/${item.workout_id}`);
+        },
     },
     async created() {
-      await this.getWorkouts();
+        await this.getWorkouts();
     },
   };
   </script>
