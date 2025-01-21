@@ -46,7 +46,7 @@
     </v-card>
   
     <!-- Диалог создания/редактирования -->
-    <v-dialog v-model="editDialog" max-width="600px">
+    <v-dialog v-model="editDialog" max-width="450px">
       <v-card>
         <v-card-title class="text-h5">
           {{ editingDraft ? "Редактировать" : "Создать" }}
