@@ -40,7 +40,7 @@ const { initializeDatabase } = require("./models/index");
 
 app.listen(port, () => {
   //###############################
-  // initializeDatabase();
+  initializeDatabase();
   //###############################
   console.log(`server started on port ${port}`);
 });

@@ -1,11 +1,12 @@
 
 const { ExercisesInWorkout } = require('../models/exercises_in_workout')
+const { Exercise } = require('../models/exercises')
 
 // get all exercises in workout
 const getExercisesInWorkout = async (req, res) => {
     try {
         const workout_id = req.params?.id
-        const exercises_in_workout = await ExercisesInWorkout.findAll({where: {workout_id}})
+        const exercises_in_workout = await ExercisesInWorkout.findAll({where: {workout_id}, include: [{model: Exercise}], order: [['exercise_id', 'ASC'], ['set', 'ASC']]})
         res.json(exercises_in_workout)
     } catch (error) {
         res.status(500).json({ error: error.message })
@@ -29,8 +30,8 @@ const createExerciseInWorkout = async (req, res) => {
 // update exercise
 const updateExerciseInWorkout = async (req, res) => {
     try {
-        const { exercise_id, workout_id, reps, weight, set } = req.body
-        const exercise_in_workout = await ExercisesInWorkout.findByPk(exercise_id)
+        const { exercise_in_workout_id, exercise_id, workout_id, reps, weight, set } = req.body
+        const exercise_in_workout = await ExercisesInWorkout.findByPk(exercise_in_workout_id)
         if (!exercise_in_workout) return res.status(404).send({ message: 'Exercise not found' })
         await exercise_in_workout.update({ exercise_id, workout_id, reps, weight, set })
         return res.status(200).send({ message: 'updated' })

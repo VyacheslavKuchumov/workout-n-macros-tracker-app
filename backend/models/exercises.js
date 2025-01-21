@@ -13,6 +13,7 @@ const Exercise = sequelize.define(
     exercise_name: {
         type: DataTypes.TEXT,
         allowNull: false,
+        unique: true,
     },
     exercise_description: {
         type: DataTypes.TEXT,

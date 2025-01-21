@@ -1,4 +1,5 @@
 <template>
+    
     <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="1100">
       <v-data-table
         v-if="exercisesInWorkout()"
@@ -19,6 +20,12 @@
             </v-btn>
           </v-toolbar>
         </template>
+
+        <template v-slot:item.action_quick_add="{ item }">
+          <v-btn size="small" color="green" @click="openQuickAddDialog(item)">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
   
         <template v-slot:item.action_edit="{ item }">
           <v-btn size="small" color="blue-darken-1" @click="openEditDialog(item)">
@@ -38,33 +45,40 @@
       <!-- Create/Edit Dialog -->
       <v-dialog v-model="editDialog" max-width="450px">
         <v-card>
+          
           <v-card-title class="text-h5">
             {{ editingEntry ? "Редактировать" : "Создать" }}
           </v-card-title>
           <v-card-text>
             <v-form ref="exerciseInWorkoutForm" v-model="valid" @submit.prevent="saveEntry">
               <v-select
-                v-model="form.exercise_id"
-                :items="availableExercises"
-                item-text="exercise_name"
+                v-model="selectExercise"
+                :items="exercises()"
+                item-title="exercise_name"
                 item-value="exercise_id"
                 label="Упражнение"
+                persistent-hint
+                return-object
+
                 :rules="[rules.required]"
               ></v-select>
               <v-text-field
                 v-model="form.weight"
                 label="Вес"
                 type="number"
+                :rules="[rules.isNumber]"
               ></v-text-field>
               <v-text-field
                 v-model="form.reps"
                 label="Повторения"
                 type="number"
+                :rules="[rules.isNumber]"
               ></v-text-field>
               <v-text-field
                 v-model="form.set"
                 label="Подход"
                 type="number"
+                :rules="[rules.isNumber]"
               ></v-text-field>
             </v-form>
           </v-card-text>
@@ -98,14 +112,17 @@
   <script>
   import { mapActions, mapState } from "vuex";
   import { useRoute } from "vue-router";
+import exercises from "@/store/exercises";
   
   export default {
     data() {
       return {
+        workout_id: null,
         confirmDeleteDialog: false,
         editDialog: false,
         entryToDelete: null,
         editingEntry: null,
+        selectExercise: null,
         form: {
           exercise_id: null,
           weight: null,
@@ -115,6 +132,8 @@
         valid: false,
         rules: {
           required: (value) => !!value || "Это поле обязательно",
+          isNumber: value =>
+          !isNaN(parseFloat(value)) && isFinite(value) || 'Только числа',
         },
       };
     },
@@ -122,10 +141,11 @@
     
       headers() {
         return [
-          { title: "Упражнение", key: "exercise_id", sortable: false },
-          { title: "Вес (кг)", key: "weight" },
+          { title: "Упражнение", key: "exercise.exercise_name", sortable: false },
+          { title: "Вес", key: "weight" },
           { title: "Повторения", key: "reps" },
-          { title: "Подходы", key: "set" },
+          { title: "Подход", key: "set" },
+          {title: "", key: "action_quick_add", sortable: false},
           { title: "", key: "action_edit", sortable: false },
           { title: "", key: "action_delete", sortable: false },
         ];
@@ -136,35 +156,59 @@
       exercisesInWorkout() {
         return this.$store.state.exercises_in_workout.data;
       },
+      exercises() {
+        return this.$store.state.exercises.data;
+      },
       ...mapActions({
         getEntries: "exercises_in_workout/getExercisesInWorkout",
         createEntry: "exercises_in_workout/createExerciseInWorkout",
         updateEntry: "exercises_in_workout/updateExerciseInWorkout",
         deleteEntry: "exercises_in_workout/deleteExerciseInWorkout",
+        getExercises: "exercises/getExercises",
       }),
+      openQuickAddDialog(item){
+        this.editingEntry = null;
+        this.selectExercise = item.exercise;
+        this.editDialog = true;
+        this.form = item;
+        this.form.set +=1;
+      },
       openCreateDialog() {
         this.editingEntry = null;
+        this.selectExercise = null;
         this.form = { exercise_id: null, weight: null, reps: null, set: null };
         this.editDialog = true;
       },
       openEditDialog(item) {
+        this.selectExercise = item.exercise;
         this.editingEntry = item;
         this.form = { ...item };
+        
         this.editDialog = true;
       },
       closeEditDialog() {
         this.editDialog = false;
+        this.selectExercise = null;
         this.form = { exercise_id: null, weight: null, reps: null, set: null };
       },
       async saveEntry() {
         const entryData = { ...this.form };
         if (this.editingEntry) {
-          entryData.exercise_in_workout_id = this.editingEntry.exercise_in_workout_id;
+          
+          entryData.workout_id = this.workout_id;
+          entryData.exercise_id = this.selectExercise.exercise_id;
+          console.log(entryData);
           await this.updateEntry(entryData);
+          
         } else {
+          
+          entryData.workout_id = this.workout_id;
+          entryData.exercise_id = this.selectExercise.exercise_id;
           await this.createEntry(entryData);
+          
+          
         }
-        await this.getEntries();
+        await this.getEntries(this.workout_id);
         this.closeEditDialog();
       },
       confirmDelete(item) {
@@ -178,7 +222,7 @@
       async deleteConfirmed() {
         if (this.entryToDelete) {
           await this.deleteEntry(this.entryToDelete.exercise_in_workout_id);
-          await this.getEntries();
+          await this.getEntries(this.workout_id);
           this.closeConfirmDialog();
         }
       },
@@ -186,7 +230,10 @@
     async created() {
       const route = useRoute();
       const workout_id = route.params.id;
+      this.workout_id = workout_id;
+
       await this.getEntries(workout_id);
+      await this.getExercises();
     },
   };
   </script>

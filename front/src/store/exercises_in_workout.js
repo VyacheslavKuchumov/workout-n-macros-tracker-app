@@ -39,8 +39,8 @@ export default {
 
     async updateExerciseInWorkout({}, input) {
         try {
-            const { exercise_in_workout_id, set, reps, weight } = input;
-            const response = await instance.put("/api/exercises_in_workout", { exercise_in_workout_id, set, reps, weight });
+            const { exercise_id, exercise_in_workout_id, workout_id, set, reps, weight } = input;
+            const response = await instance.put("/api/exercises_in_workout", {exercise_in_workout_id, workout_id, exercise_id, set, reps, weight });
             if (response.ok) return console.log("ok");
         }
         catch (error) {
