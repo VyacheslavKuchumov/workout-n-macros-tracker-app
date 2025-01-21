@@ -5,6 +5,7 @@ import instance from "@/middlewares";
 import HomeView from "@/views/HomeView.vue";
 import Register from "@/views/Auth/Register.vue";
 import Login from "@/views/Auth/Login.vue";
+import ProfileView from "@/views/ProfileView.vue";
 
 
 
@@ -26,6 +27,12 @@ const routes = [
     name: "login",
     component: Login,
   },
+  {
+    path: "/profile",
+    name: "profile",
+    component: ProfileView,
+    meta: { auth: true },
+  }
 ];
 
 const router = createRouter({

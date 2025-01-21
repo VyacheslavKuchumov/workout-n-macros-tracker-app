@@ -9,6 +9,7 @@ const port = process.env.PORT;
 
 const auth_routes = require("./routes/auth");
 const users_routes = require("./routes/users");
+const user_info_routes = require("./routes/user_info");
 
 
 app.use(
@@ -19,6 +20,7 @@ app.use(
 
 app.use("/api/auth", auth_routes);
 app.use("/api/users", users_routes);
+app.use("/api/user_info", user_info_routes);
 
 
 

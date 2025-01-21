@@ -5,15 +5,12 @@ const { DataTypes } = require("sequelize");
 const User_info = sequelize.define(
   "user_info",
   {
-    user_info_id: {
-      type: DataTypes.BIGINT,
-      autoIncrement: true,
-      primaryKey: true,
-    },
+    
     user_uid: {
       type: DataTypes.UUID,
       allowNull: false,
-      unique: true
+      unique: true,
+      primaryKey: true,
     },
 
     height: {
@@ -22,14 +19,11 @@ const User_info = sequelize.define(
     weight: {
       type: DataTypes.FLOAT,
     },
-    age: {
-      type: DataTypes.INTEGER,
-    },
     sex: {
       type: DataTypes.TEXT,
     },
     date_of_birth: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
   },
   {
