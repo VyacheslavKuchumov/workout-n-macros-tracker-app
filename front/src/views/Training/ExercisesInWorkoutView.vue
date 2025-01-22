@@ -198,18 +198,20 @@ import exercises from "@/store/exercises";
           entryData.workout_id = this.workout_id;
           entryData.exercise_id = this.selectExercise.exercise_id;
           console.log(entryData);
+          this.closeEditDialog();
           await this.updateEntry(entryData);
           
         } else {
           
           entryData.workout_id = this.workout_id;
           entryData.exercise_id = this.selectExercise.exercise_id;
+          this.closeEditDialog();
           await this.createEntry(entryData);
           
           
         }
         await this.getEntries(this.workout_id);
-        this.closeEditDialog();
+        
       },
       confirmDelete(item) {
         this.entryToDelete = item;

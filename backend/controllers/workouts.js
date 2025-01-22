@@ -20,7 +20,8 @@ function russianToIsoDate(russianDate) {
 // get all workouts
 const getWorkouts = async (req, res) => {
     try {
-        const workouts = await Workout.findAll({order: [['workout_date', 'DESC']],})
+        const user_uid = req.params?.id
+        const workouts = await Workout.findAll({where: {user_uid} , order: [['workout_date', 'DESC']],})
         res.status(200).json(workouts)
     } catch (error) {
         res.status(500).json({ error: error.message })

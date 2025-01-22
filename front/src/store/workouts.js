@@ -16,7 +16,8 @@ export default {
   actions: {
     async getWorkouts({ commit }) {
         try {
-            const response = await instance.get(`/api/workouts`);
+            const user_uid = localStorage.getItem("uid");
+            const response = await instance.get(`/api/workouts/${user_uid}` );
             
             if (response) return commit("setData", response.data);
         }
