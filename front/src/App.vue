@@ -6,7 +6,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-app-bar-nav-icon @click="drawer = !drawer" />
+      <v-app-bar-nav-icon v-if="isAuth" @click="drawer = !drawer" />
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
