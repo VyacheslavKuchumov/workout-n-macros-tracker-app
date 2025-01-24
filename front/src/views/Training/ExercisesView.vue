@@ -1,49 +1,68 @@
 <template>
     
-    <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="1100">
-      <v-data-table
-        v-if="exercises()"
-        :headers="headers"
-        :items="exercises()"
-        :items-per-page="-1"
+  <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="1100">
+    <v-toolbar flat>
+      <v-toolbar-title>Упражнения</v-toolbar-title>
+      
+      <v-spacer></v-spacer>
+      <v-btn icon="mdi-plus" color="primary" @click="openCreateDialog">
+      </v-btn>
+    </v-toolbar>
 
-        hide-default-footer
-        fixed-header
-        class="elevation-1"
-      >
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Упражнения</v-toolbar-title>
-            <v-divider class="mx-4" inset vertical></v-divider>
-  
-            
-            
-            <v-spacer></v-spacer>
-  
-            <v-btn class="mb-2" color="primary" dark @click="openCreateDialog">
-              Добавить
-            </v-btn>
-          </v-toolbar>
-        </template>
+    <v-container v-if="exercises() && exercises().length">
+      <v-row 
+      v-for="item in exercises()"
+      :key="item.exercise_id">
+        <v-col>
+          <v-card class="ma-2">
+            <v-card-title class="text-h6">
+              {{ item.exercise_name }}
+            </v-card-title>
 
-        <template v-slot:item.action_edit="{ item }">
-          <v-btn size="small" color="blue-darken-1" @click="openEditDialog(item)">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-          
-        </template>
+            <v-card-text>
+                <v-row dense>
+                  <v-col v-if="item.exercise_description">
+                    <div class="text-caption">Описание</div>
+                    <div class="text-h6">
+                      {{ item.exercise_description }}
+                    </div>
+                  </v-col>
+                </v-row>
+                <v-row dense>
+                  <v-col v-if="item.muscle_group">
+                    <div class="text-caption">Группа мышц</div>
+                    <div class="text-h6">
+                      {{ item.muscle_group }}
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-card-text>
 
-        <template v-slot:item.action_delete="{ item }">
-          
-          <v-btn size="small" color="red-darken-1" @click="confirmDelete(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-        </template>
-  
-  
-        <template v-slot:no-data> Нет данных </template>
-      </v-data-table>
-    </v-card>
+              
+
+            <v-card-actions class="justify-end">
+              <v-btn
+                icon="mdi-pencil"
+                color="blue-darken-1"
+                variant="text"
+                @click="openEditDialog(item)"
+              ></v-btn>
+              <v-btn
+                icon="mdi-delete"
+                color="red-darken-1"
+                variant="text"
+                @click="confirmDelete(item)"
+              ></v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-alert v-else type="info" class="ma-4">
+      Нет данных
+    </v-alert>
+  </v-card>
   
     <!-- Диалог создания/редактирования -->
     <v-dialog v-model="editDialog" max-width="450px">

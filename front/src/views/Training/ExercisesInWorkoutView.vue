@@ -1,46 +1,72 @@
 <template>
     
     <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="1100">
-      <v-data-table
-        v-if="exercisesInWorkout()"
-        :headers="headers"
-        :items="exercisesInWorkout()"
-        :items-per-page="-1"
-        hide-default-footer
-        fixed-header
-        class="elevation-1"
-      >
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Упражнения в тренировке</v-toolbar-title>
-            <v-divider class="mx-4" inset vertical></v-divider>
-            <v-spacer></v-spacer>
-            <v-btn class="mb-2" color="primary" dark @click="openCreateDialog">
-              Добавить
-            </v-btn>
-          </v-toolbar>
-        </template>
+    <v-toolbar flat>
+      <v-toolbar-title>Упражнения в тренировке</v-toolbar-title>
+      
+      <v-spacer></v-spacer>
+      <v-btn icon="mdi-plus" color="primary" @click="openCreateDialog">
+      </v-btn>
+    </v-toolbar>
 
-        <template v-slot:item.action_quick_add="{ item }">
-          <v-btn size="small" color="green" @click="openQuickAddDialog(item)">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </template>
-  
-        <template v-slot:item.action_edit="{ item }">
-          <v-btn size="small" color="blue-darken-1" @click="openEditDialog(item)">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-        </template>
-  
-        <template v-slot:item.action_delete="{ item }">
-          <v-btn size="small" color="red-darken-1" @click="confirmDelete(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-        </template>
-  
-        <template v-slot:no-data> Нет данных </template>
-      </v-data-table>
+    <v-container v-if="exercisesInWorkout() && exercisesInWorkout().length">
+      <v-row v-for="item in exercisesInWorkout()"
+      :key="item.exercise_in_workout_id">
+        <v-col>
+          <v-card class="ma-2">
+            <v-card-title class="text-h6">
+              {{ item.exercise.exercise_name }}
+            </v-card-title>
+
+            <v-card-text>
+              <v-row dense>
+                <v-col cols="6">
+                  <div class="text-caption">Вес</div>
+                  <div class="text-h6">{{ item.weight }}</div>
+                </v-col>
+                <v-col cols="6">
+                  <div class="text-caption">Повторения</div>
+                  <div class="text-h6">{{ item.reps }}</div>
+                </v-col>
+                <v-col cols="12">
+                  <div class="text-caption">Подход</div>
+                  <div class="text-h6">{{ item.set }}</div>
+                </v-col>
+              </v-row>
+            </v-card-text>
+
+            <v-card-actions class="justify-end">
+              <v-btn
+                icon="mdi-plus"
+                color="green"
+                variant="text"
+                @click="openQuickAddDialog(item)"
+              ></v-btn>
+              <v-btn
+                icon="mdi-pencil"
+                color="blue-darken-1"
+                variant="text"
+                @click="openEditDialog(item)"
+              ></v-btn>
+              <v-btn
+                icon="mdi-delete"
+                color="red-darken-1"
+                variant="text"
+                @click="confirmDelete(item)"
+              ></v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-alert
+      v-else
+      type="info"
+      class="ma-4"
+    >
+      Нет данных
+    </v-alert>
   
       <!-- Create/Edit Dialog -->
       <v-dialog v-model="editDialog" max-width="450px">
