@@ -33,16 +33,16 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['https://django-test.vyachik-dev.ru', 'django-test.vyachik-dev.ru', 'localhost', '127.0.0.1', '0.0.0.0', 'http://localhost:3000']
+ALLOWED_HOSTS = ['https://workout-django.vyachik-dev.ru', 'workout-django.vyachik-dev.ru', 'localhost', '127.0.0.1', '0.0.0.0', 'http://localhost:3000']
 
 CORS_ALLOWED_ORIGINS = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  'https://nuxt-test.vyachik-dev.ru'
+  'https://workout-app.vyachik-dev.ru'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://django-test.vyachik-dev.ru',
+    'https://workout-django.vyachik-dev.ru',
 ]
 
 REST_FRAMEWORK = {

@@ -2,28 +2,38 @@ from django.db import models
 
 # Create your models here.
 
-# Model for Customer
-class Customer(models.Model):
-    customer_name = models.CharField(max_length=50)
+# Model for muscle groups
+class MuscleGroup(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.customer_name}"
+        return self.name
+
+# Model for exercises
+class Exercise(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    muscle_group = models.ForeignKey(MuscleGroup, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+# Model for workouts
+class Workout(models.Model):
+    name = models.CharField(max_length=100)
+    workout_date = models.DateField()
+
+
+    def __str__(self):
+        return self.name
     
-# Model for Product
-class Product(models.Model):
-    product_name = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
+# Model for workout exercises
+class WorkoutExercise(models.Model):
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE, related_name='exercises')
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    set = models.PositiveIntegerField()
+    reps = models.PositiveIntegerField()
 
     def __str__(self):
-        return f"{self.product_name} - ${self.price}"
-
-# Model for Order
-class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    order_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Order {self.id} by {self.customer} for {self.quantity} x {self.product}"
+        return f"{self.exercise.name} in {self.workout.name}"

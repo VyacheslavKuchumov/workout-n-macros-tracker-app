@@ -1,20 +1,23 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from .models import Customer, Product, Order
+from .models import MuscleGroup, Exercise, Workout, WorkoutExercise
 
-@admin.register(Customer)
-class CustomerAdmin(ModelAdmin):
-    list_display = ('id', 'customer_name')
-    search_fields = ('customer_name',)
+@admin.register(MuscleGroup)
+class MuscleGroupAdmin(ModelAdmin):
+    list_display = ('name', 'description')
+    search_fields = ('name', 'description')
 
-@admin.register(Product)
-class ProductAdmin(ModelAdmin):
-    list_display = ('id', 'product_name', 'price', 'stock')
-    search_fields = ('product_name',)
-    list_filter = ('price',)
+@admin.register(Exercise)
+class ExerciseAdmin(ModelAdmin):
+    list_display = ('name', 'description', 'muscle_group')
+    search_fields = ('name', 'description', 'muscle_group__name')
 
-@admin.register(Order)
-class OrderAdmin(ModelAdmin):
-    list_display = ('id', 'customer', 'product', 'quantity', 'order_date')
-    list_filter = ('order_date', 'product')
-    search_fields = ('customer__customer_name',)
+@admin.register(Workout)
+class WorkoutAdmin(ModelAdmin):
+    list_display = ('name', 'workout_date')
+    search_fields = ('name', 'workout_date')
+
+@admin.register(WorkoutExercise)
+class WorkoutExerciseAdmin(ModelAdmin):
+    list_display = ('workout', 'exercise', 'set', 'reps')
+    search_fields = ('workout__name', 'exercise__name')
