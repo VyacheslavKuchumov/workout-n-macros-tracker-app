@@ -23,7 +23,8 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path('', RedirectView.as_view(url='/admin/', permanent=True)),
     path('admin/', admin.site.urls),
-    path('training/', include('training.urls')),
+    path('api/accounts/', include('accounts.urls')),
+    path('api/training/', include('training.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 
 ]
