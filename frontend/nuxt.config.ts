@@ -11,6 +11,9 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/scripts',
     '@nuxt/ui',
-    '@nuxt/test-utils'
+    '@nuxt/test-utils',
+    'vuetify-nuxt-module',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate'
   ]
 })
