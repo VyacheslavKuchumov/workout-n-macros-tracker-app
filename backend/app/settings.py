@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import environ
 
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,6 +61,21 @@ REST_FRAMEWORK = {
 ],
 }
 
+# Configuring REST Framework to use JWTAuthentication
+REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # keeping other auth classes as fallback:
+    'rest_framework.authentication.SessionAuthentication',
+]
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
@@ -81,7 +98,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'training',
+    'training', # custom app for training management
+    'rest_framework_simplejwt',  # JWT authentication
+    'accounts',  # custom app for user management (with jwt authentication)
 ]
 
 MIDDLEWARE = [
