@@ -15,5 +15,11 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate'
-  ]
+  ],
+  runtimeConfig: {
+
+    public: {
+      BACKEND_URL: process.env.BACKEND_URL,
+    }
+  }
 })

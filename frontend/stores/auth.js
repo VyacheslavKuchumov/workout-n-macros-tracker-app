@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useNuxtApp } from '#app'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -10,8 +9,8 @@ export const useAuthStore = defineStore('auth', {
   persist: true,  // requires @pinia/plugin-persistedstate
   actions: {
     async login({ email, password }) {
-      const { $fetch } = useNuxtApp()
-      const res = await $fetch('/api/accounts/token/', {
+      const config = useNuxtApp().$config
+      const res = await $fetch(`${config.public.BACKEND_URL}/api/accounts/token/`, {
         method: 'POST',
         body: { username: email, password },
       })
@@ -20,9 +19,8 @@ export const useAuthStore = defineStore('auth', {
       await this.fetchUser()
     },
     async register({ email, password, firstName, lastName }) {
-      const { $fetch } = useNuxtApp()
-      // adjust endpoint if your backend differs
-      await $fetch('/api/accounts/register/', {
+      const config = useNuxtApp().$config
+      await $fetch(`${config.public.BACKEND_URL}/api/accounts/register/`, {
         method: 'POST',
         body: {
           email, password, first_name: firstName, last_name: lastName
@@ -32,9 +30,9 @@ export const useAuthStore = defineStore('auth', {
       await this.login({ email, password })
     },
     async fetchUser() {
+      const config = useNuxtApp().$config
       if (!this.accessToken) return
-      const { $fetch } = useNuxtApp()
-      this.user = await $fetch('/api/accounts/me/', {
+      this.user = await $fetch(`${config.public.BACKEND_URL}/api/accounts/me/`, {
         headers: { Authorization: `Bearer ${this.accessToken}` }
       })
     },
