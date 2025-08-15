@@ -39,9 +39,9 @@
 
           <v-card-actions class="justify-center">
             <span>Нет аккаунта?</span>
-            <RouterLink to="/register" class="ml-2 text--primary text-decoration-underline">
+            <v-btn to="/register" class="ml-2 text--primary text-decoration-underline">
               Зарегистрироваться
-            </RouterLink>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

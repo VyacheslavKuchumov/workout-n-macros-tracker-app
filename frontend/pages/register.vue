@@ -53,9 +53,9 @@
 
           <v-card-actions class="justify-center">
             <span>Уже есть аккаунт?</span>
-            <RouterLink to="/login" class="ml-2 text--primary text-decoration-underline">
+            <v-btn to="/login" class="ml-2 text--primary text-decoration-underline">
               Войти в аккаунт
-            </RouterLink>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
