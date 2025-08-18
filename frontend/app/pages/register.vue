@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
@@ -102,4 +102,8 @@ async function onSubmit() {
 
 <style scoped>
 /* Add any custom overrides here */
-</style>
+</style> -->
+
+<template>
+  <PlaceholderCard />
+</template>
