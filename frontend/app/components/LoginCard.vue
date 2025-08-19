@@ -1,28 +1,27 @@
 <!-- Login.vue -->
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
     <UCard class="w-full max-w-md">
       <template #header>
         <h2 class="text-xl font-semibold">Войти в аккаунт</h2>
       </template>
 
-      <form @submit.prevent="onSubmit" class="space-y-4">
-        <UFormGroup label="Username" required>
+      <UForm @submit.prevent="onSubmit" class="space-y-4">
+        <UFormField label="Username" required>
           <UInput
             v-model="username"
             placeholder="Введите имя пользователя"
             :disabled="loading"
           />
-        </UFormGroup>
+        </UFormField>
 
-        <UFormGroup label="Пароль" required>
+        <UFormField label="Пароль" required>
           <UInput
             v-model="password"
             type="password"
             placeholder="Введите пароль"
             :disabled="loading"
           />
-        </UFormGroup>
+        </UFormField>
 
         <UButton
           type="submit"
@@ -32,7 +31,7 @@
         >
           Вход в аккаунт
         </UButton>
-      </form>
+      </UForm>
 
       <template #footer>
         <div class="text-center">
@@ -43,7 +42,6 @@
         </div>
       </template>
     </UCard>
-  </div>
 </template>
 
 <script setup>
