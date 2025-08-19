@@ -1,3 +1,4 @@
+import { ro } from '@nuxt/ui/runtime/locale/index.js'
 import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
@@ -6,6 +7,9 @@ export const useAuthStore = defineStore('auth', {
     refreshToken: null,
     user: null,
   }),
+  getters: {
+    isAuthenticated: (state) => !!state.accessToken,
+  },
   persist: true,  // requires @pinia/plugin-persistedstate
   actions: {
     async login({ username, password }) {
@@ -37,9 +41,11 @@ export const useAuthStore = defineStore('auth', {
       })
     },
     logout() {
+      const router = useRouter()
       this.accessToken = null
       this.refreshToken = null
       this.user = null
+      router.push('/login')
     }
   }
 })
