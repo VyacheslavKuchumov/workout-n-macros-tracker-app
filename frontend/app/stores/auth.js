@@ -8,26 +8,26 @@ export const useAuthStore = defineStore('auth', {
   }),
   persist: true,  // requires @pinia/plugin-persistedstate
   actions: {
-    async login({ email, password }) {
+    async login({ username, password }) {
       const config = useNuxtApp().$config
       const res = await $fetch(`${config.public.BACKEND_URL}/api/accounts/token/`, {
         method: 'POST',
-        body: { username: email, password },
+        body: { username, password },
       })
       this.accessToken = res.access
       this.refreshToken = res.refresh
       await this.fetchUser()
     },
-    async register({ email, password, firstName, lastName }) {
+    async signup({ username, password }) {
       const config = useNuxtApp().$config
-      await $fetch(`${config.public.BACKEND_URL}/api/accounts/register/`, {
+      await $fetch(`${config.public.BACKEND_URL}/api/accounts/signup/`, {
         method: 'POST',
         body: {
-          email, password, first_name: firstName, last_name: lastName
+          username, password
         },
       })
       // auto-login after register
-      await this.login({ email, password })
+      await this.login({ username, password })
     },
     async fetchUser() {
       const config = useNuxtApp().$config

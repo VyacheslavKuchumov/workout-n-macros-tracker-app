@@ -12,5 +12,10 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate'
   ],
+  runtimeConfig: {
+    public: {
+      BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:8000'
+    }
+  },
   css: ['~/assets/css/main.css']
 })

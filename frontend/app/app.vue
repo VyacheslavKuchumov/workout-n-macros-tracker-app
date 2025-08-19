@@ -4,7 +4,7 @@
     <!-- Main layout container -->
     <div class="min-h-screen flex flex-col bg-gray-50 text-gray-900">
       <!-- Header -->
-      <AppNav />
+      <NavBar />
 
       <!-- Page Content -->
       <main class="flex-1 container mx-auto p-6">
@@ -19,4 +19,6 @@
   </UApp>
 </template>
 
+<script setup lang="ts">
 
+</script>
