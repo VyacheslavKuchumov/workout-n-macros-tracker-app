@@ -1,6 +1,6 @@
 
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="flex items-center justify-center min-h-screen bg-gray-50">
     <UCard class="w-full max-w-md">
       <template #header>
         <h2 class="text-xl font-semibold">Регистрация</h2>
