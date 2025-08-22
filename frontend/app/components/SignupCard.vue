@@ -1,40 +1,50 @@
 
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-50">
     <UCard class="w-full max-w-md">
       <template #header>
         <h2 class="text-xl font-semibold">Регистрация</h2>
       </template>
 
-      <form @submit.prevent="onSubmit" class="space-y-4">
-
-
-        <UFormGroup label="Username" required>
+      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+        <UFormField label="Логин" name="username" required>
           <UInput
-            v-model="username"
+            class="w-full"
+            v-model="state.username"
             placeholder="Введите имя пользователя"
             :disabled="loading"
           />
-        </UFormGroup>
+        </UFormField>
 
-        <UFormGroup label="Пароль" required>
+        <UFormField label="Пароль" name="password" required>
           <UInput
-            v-model="password"
+            class="w-full"
+            v-model="state.password"
             type="password"
             placeholder="Введите пароль"
             :disabled="loading"
           />
-        </UFormGroup>
+        </UFormField>
+
+        <UFormField label="Подтверждение пароля" name="confirmPassword" required>
+          <UInput
+            class="w-full"
+            v-model="state.confirmPassword"
+            type="password"
+            placeholder="Подтвердите пароль"
+            :disabled="loading"
+          />
+        </UFormField>
 
         <UButton
           type="submit"
           color="primary"
           block
           :loading="loading"
+          :disabled="!v.safeParse(schema, state).success"
         >
           Регистрация
         </UButton>
-      </form>
+      </UForm>
 
       <template #footer>
         <div class="text-center">
@@ -45,28 +55,73 @@
         </div>
       </template>
     </UCard>
-  </div>
+
 </template>
 
-<script setup>
-const username  = ref('')
-const password  = ref('')
+<script setup lang="ts">
+
+import * as v from 'valibot'
+import type { FormSubmitEvent } from '@nuxt/ui'
+
+
+// const username  = ref('')
+// const password  = ref('')
 const loading   = ref(false)
 
 const auth   = useAuthStore()
 const router = useRouter()
 
-async function onSubmit() {
+  
+const schema = v.pipe(
+  v.object({
+    username: v.pipe(
+      v.string(),
+      v.minLength(2, 'Имя пользователя должно содержать минимум 2 символа')
+    ),
+    password: v.pipe(
+      v.string(),
+      v.minLength(8, 'Пароль должен содержать минимум 8 символов')
+    ),
+    confirmPassword: v.pipe(
+      v.string(),
+    )
+  }),
+  v.forward(
+    v.partialCheck(
+      [['password'], ['confirmPassword']],
+      (input) => input.password === input.confirmPassword,
+      'Пароли не совпадают'
+    ),
+    ['confirmPassword']
+  )
+)
+
+type Schema = v.InferOutput<typeof schema>
+
+const state = reactive({
+  username: '',
+  password: '',
+  confirmPassword: ''
+})
+
+const toast = useToast()
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+
   loading.value = true
   try {
     await auth.signup({
-      username:  username.value,
-      password:  password.value,
+      username:  event.data.username,
+      password:  event.data.password,
     })
+    toast.add({ title: 'Успешно', description: 'Вы были зарегистрированы.', color: 'success' })
     router.push('/')
   } catch (err) {
     console.error(err)
-    alert('Registration failed: please try again')
+    if (err instanceof Error) {
+      toast.add({ title: 'Ошибка', description: err.message, color: 'error' })
+    } else {
+      toast.add({ title: 'Ошибка', description: 'Произошла непредвиденная ошибка', color: 'error' })
+    }
   } finally {
     loading.value = false
   }
