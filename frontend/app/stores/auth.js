@@ -1,5 +1,3 @@
-import { ro } from '@nuxt/ui/runtime/locale/index.js'
-import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
