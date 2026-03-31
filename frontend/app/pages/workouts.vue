@@ -87,22 +87,18 @@ async function deleteWorkout() {
 </script>
 
 <template>
-  <div class="space-y-8">
-    <UCard class="border-white/70 bg-white/90 shadow-2xl shadow-slate-900/5">
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div class="space-y-2">
-          <UBadge color="primary" variant="soft" class="rounded-full px-3 py-1">
-            Workout calendar
-          </UBadge>
-          <h1 class="text-3xl font-semibold text-slate-950">
-            Choose a day, plan the exercises, and record every set.
-          </h1>
-          <p class="max-w-2xl text-sm leading-6 text-slate-600">
+  <div class="page-stack">
+    <UCard class="page-card">
+      <div class="section-header">
+        <div class="page-header">
+          <UBadge color="primary" variant="soft" class="pill-badge">Workout calendar</UBadge>
+          <h1 class="page-title">Choose a day, plan the exercises, and record every set.</h1>
+          <p class="page-description">
             One workout is stored for each day, so your calendar stays clean and your progress history stays readable.
           </p>
         </div>
 
-        <div class="flex flex-wrap gap-3">
+        <div class="calendar-actions">
           <UButton color="neutral" variant="outline" icon="i-lucide-chevron-left" @click="currentMonth = addMonths(currentMonth, -1)">
             Previous
           </UButton>
@@ -116,30 +112,28 @@ async function deleteWorkout() {
       </div>
     </UCard>
 
-    <div class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-      <UCard class="border-white/70 bg-white/90 shadow-xl shadow-slate-900/5">
+    <div class="dashboard-grid dashboard-grid--sidebar">
+      <UCard class="page-card">
         <template #header>
-          <div class="flex items-center justify-between gap-3">
-            <div>
-              <h2 class="text-2xl font-semibold text-slate-950">{{ formatMonth(currentMonth) }}</h2>
-              <p class="text-sm text-slate-500">
-                Click any day to inspect or plan the session.
-              </p>
+          <div class="section-header">
+            <div class="page-header">
+              <h2 class="section-title">{{ formatMonth(currentMonth) }}</h2>
+              <p class="note-text">Click any day to inspect or plan the session.</p>
             </div>
 
-            <UBadge color="neutral" variant="subtle" class="rounded-full px-3 py-1">
+            <UBadge color="neutral" variant="subtle" class="pill-badge">
               {{ workouts.length }} scheduled
             </UBadge>
           </div>
         </template>
 
-        <div class="grid grid-cols-7 gap-2 text-center text-xs uppercase tracking-[0.18em] text-slate-400">
-          <div v-for="weekday in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="weekday" class="pb-2">
+        <div class="calendar-weekdays">
+          <div v-for="weekday in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="weekday" class="calendar-weekdays__label">
             {{ weekday }}
           </div>
         </div>
 
-        <div class="mt-2 grid grid-cols-7 gap-2">
+        <div class="calendar-grid">
           <button
             v-for="day in calendarDays"
             :key="day.iso"
@@ -162,12 +156,12 @@ async function deleteWorkout() {
         </div>
       </UCard>
 
-      <UCard class="border-white/70 bg-white/90 shadow-xl shadow-slate-900/5">
+      <UCard class="page-card">
         <template #header>
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Selected day</p>
-              <h2 class="text-2xl font-semibold text-slate-950">{{ formatLongDate(selectedDate) }}</h2>
+          <div class="section-header">
+            <div class="page-header">
+              <p class="page-eyebrow">Selected day</p>
+              <h2 class="section-title">{{ formatLongDate(selectedDate) }}</h2>
             </div>
 
             <UButton
@@ -180,65 +174,53 @@ async function deleteWorkout() {
           </div>
         </template>
 
-        <div v-if="workoutsStatus === 'pending'" class="space-y-4">
-          <USkeleton class="h-24 rounded-3xl" />
-          <USkeleton class="h-24 rounded-3xl" />
+        <div v-if="workoutsStatus === 'pending'" class="stack-md">
+          <USkeleton class="skeleton-card skeleton-card--compact" />
+          <USkeleton class="skeleton-card skeleton-card--compact" />
         </div>
 
-        <div v-else-if="selectedWorkout" class="space-y-5">
-          <div class="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-5">
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <h3 class="text-xl font-semibold text-slate-950">{{ selectedWorkout.name || 'Workout session' }}</h3>
-                <p class="mt-1 text-sm text-slate-500">{{ selectedWorkout.focus || 'General training focus' }}</p>
+        <div v-else-if="selectedWorkout" class="stack-lg">
+          <div class="summary-card">
+            <div class="session-header">
+              <div class="stack-sm">
+                <h3 class="section-title">{{ selectedWorkout.name || 'Workout session' }}</h3>
+                <p class="note-text">{{ selectedWorkout.focus || 'General training focus' }}</p>
               </div>
 
-              <UBadge color="primary" variant="soft" class="rounded-full px-3 py-1">
+              <UBadge color="primary" variant="soft" class="pill-badge">
                 {{ selectedWorkout.total_sets }} sets
               </UBadge>
             </div>
 
-            <p class="mt-4 text-sm leading-6 text-slate-600">
-              {{ selectedWorkout.notes || 'No notes recorded for this workout.' }}
-            </p>
+            <p class="section-description">{{ selectedWorkout.notes || 'No notes recorded for this workout.' }}</p>
 
-            <p class="mt-4 text-sm font-medium text-slate-800">
-              Total volume: {{ formatVolume(selectedWorkout.total_volume) }}
-            </p>
+            <p class="table-cell__title">Total volume: {{ formatVolume(selectedWorkout.total_volume) }}</p>
           </div>
 
-          <div
-            v-for="exercise in selectedWorkout.exercises"
-            :key="exercise.id"
-            class="rounded-3xl border border-slate-200/80 bg-white p-5"
-          >
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <p class="text-xs uppercase tracking-[0.18em] text-slate-400">{{ exercise.exercise.muscle_group.name }}</p>
-                <h4 class="mt-1 text-lg font-semibold text-slate-950">{{ exercise.exercise.name }}</h4>
+          <div v-for="exercise in selectedWorkout.exercises" :key="exercise.id" class="exercise-card">
+            <div class="exercise-header">
+              <div class="stack-sm">
+                <p class="muted-label">{{ exercise.exercise.muscle_group.name }}</p>
+                <h4 class="section-title">{{ exercise.exercise.name }}</h4>
               </div>
 
-              <UBadge color="neutral" variant="outline" class="rounded-full px-3 py-1">
+              <UBadge color="neutral" variant="outline" class="pill-badge">
                 {{ exercise.sets.length }} sets
               </UBadge>
             </div>
 
-            <p class="mt-3 text-sm text-slate-500">{{ exercise.notes || 'No exercise notes.' }}</p>
+            <p class="note-text">{{ exercise.notes || 'No exercise notes.' }}</p>
 
-            <div class="mt-4 grid gap-3">
-              <div
-                v-for="workoutSet in exercise.sets"
-                :key="workoutSet.id"
-                class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm"
-              >
-                <span class="font-medium text-slate-700">Set {{ workoutSet.order }}</span>
-                <span class="text-slate-600">{{ workoutSet.reps }} reps</span>
-                <span class="font-semibold text-slate-900">{{ workoutSet.weight_kg }} kg</span>
+            <div class="set-list">
+              <div v-for="workoutSet in exercise.sets" :key="workoutSet.id" class="set-row">
+                <span class="table-cell__title">Set {{ workoutSet.order }}</span>
+                <span class="table-cell__note">{{ workoutSet.reps }} reps</span>
+                <span class="set-row__weight">{{ workoutSet.weight_kg }} kg</span>
               </div>
             </div>
           </div>
 
-          <div class="flex flex-wrap gap-3">
+          <div class="button-row">
             <UButton color="neutral" variant="outline" icon="i-lucide-pencil" @click="openEditWorkout(selectedWorkout)">
               Edit session
             </UButton>
@@ -248,14 +230,18 @@ async function deleteWorkout() {
           </div>
         </div>
 
-        <div v-else class="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
-          <p class="text-lg font-semibold text-slate-900">Nothing planned for this day yet.</p>
-          <p class="mt-2 text-sm text-slate-500">
-            Choose your exercises, add sets, and drop the session onto the calendar.
-          </p>
-          <UButton class="mt-5" color="primary" icon="i-lucide-calendar-plus" @click="openCreateWorkout()">
-            Create workout
-          </UButton>
+        <div v-else class="empty-state">
+          <div class="stack-md">
+            <div class="stack-sm">
+              <p class="empty-state__title">Nothing planned for this day yet.</p>
+              <p class="note-text">Choose your exercises, add sets, and drop the session onto the calendar.</p>
+            </div>
+            <div class="button-row button-row--center">
+              <UButton color="primary" icon="i-lucide-calendar-plus" @click="openCreateWorkout()">
+                Create workout
+              </UButton>
+            </div>
+          </div>
         </div>
       </UCard>
     </div>

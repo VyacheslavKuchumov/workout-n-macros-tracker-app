@@ -50,60 +50,54 @@ async function onSubmit() {
 </script>
 
 <template>
-  <div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-    <UCard class="border-white/70 bg-teal-950 text-white shadow-2xl shadow-teal-950/20">
-      <div class="space-y-6">
-        <div class="space-y-2">
-          <p class="text-sm uppercase tracking-[0.22em] text-teal-200">
-            Personal training companion
-          </p>
-          <h1 class="text-3xl font-semibold">
-            Build a training log that actually shows your improvement.
-          </h1>
+  <div class="auth-grid auth-grid--reversed">
+    <UCard class="page-card feature-panel">
+      <div class="stack-lg">
+        <div class="page-header">
+          <p class="page-eyebrow">Personal training companion</p>
+          <h1 class="page-title">Build a training log that actually shows your improvement.</h1>
         </div>
 
-        <div class="space-y-4 text-sm leading-6 text-teal-50/80">
-          <p>Choose workout days on a calendar and save every exercise, set, rep, and load.</p>
-          <p>Track body weight separately so strength trends and scale trends live in one place.</p>
-          <p>Keep your profile up to date and adjust your goal weight whenever plans change.</p>
+        <div class="stack-md">
+          <p class="section-description">Choose workout days on a calendar and save every exercise, set, rep, and load.</p>
+          <p class="section-description">Track body weight separately so strength trends and scale trends live in one place.</p>
+          <p class="section-description">Keep your profile up to date and adjust your goal weight whenever plans change.</p>
         </div>
       </div>
     </UCard>
 
-    <UCard class="border-white/70 bg-white/95 shadow-2xl shadow-slate-900/5">
+    <UCard class="page-card">
       <template #header>
-        <div class="space-y-1">
-          <h2 class="text-2xl font-semibold text-slate-900">Create account</h2>
-          <p class="text-sm text-slate-500">
-            Set up your profile and jump straight into the dashboard.
-          </p>
+        <div class="page-header">
+          <h2 class="section-title">Create account</h2>
+          <p class="note-text">Set up your profile and jump straight into the dashboard.</p>
         </div>
       </template>
 
-      <form class="space-y-4" @submit.prevent="onSubmit">
-        <div class="grid gap-4 sm:grid-cols-2">
+      <form class="form-stack" @submit.prevent="onSubmit">
+        <div class="form-grid">
           <UFormField label="First name">
-            <UInput v-model="state.first_name" class="w-full" placeholder="Alex" :disabled="loading" />
+            <UInput v-model="state.first_name" class="field-control" placeholder="Alex" :disabled="loading" />
           </UFormField>
 
           <UFormField label="Last name">
-            <UInput v-model="state.last_name" class="w-full" placeholder="Morgan" :disabled="loading" />
+            <UInput v-model="state.last_name" class="field-control" placeholder="Morgan" :disabled="loading" />
           </UFormField>
         </div>
 
         <UFormField label="Username" required>
-          <UInput v-model="state.username" class="w-full" placeholder="Choose a username" :disabled="loading" />
+          <UInput v-model="state.username" class="field-control" placeholder="Choose a username" :disabled="loading" />
         </UFormField>
 
         <UFormField label="Email">
-          <UInput v-model="state.email" class="w-full" type="email" placeholder="you@example.com" :disabled="loading" />
+          <UInput v-model="state.email" class="field-control" type="email" placeholder="you@example.com" :disabled="loading" />
         </UFormField>
 
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="form-grid">
           <UFormField label="Password" required>
             <UInput
               v-model="state.password"
-              class="w-full"
+              class="field-control"
               type="password"
               placeholder="At least 8 characters"
               :disabled="loading"
@@ -117,7 +111,7 @@ async function onSubmit() {
           >
             <UInput
               v-model="state.confirmPassword"
-              class="w-full"
+              class="field-control"
               type="password"
               placeholder="Repeat password"
               :disabled="loading"
@@ -138,11 +132,9 @@ async function onSubmit() {
       </form>
 
       <template #footer>
-        <p class="text-sm text-slate-500">
+        <p class="note-text">
           Already training with us?
-          <NuxtLink to="/login" class="font-medium text-teal-700 hover:text-teal-600">
-            Sign in instead
-          </NuxtLink>
+          <NuxtLink to="/login" class="auth-link">Sign in instead</NuxtLink>
         </p>
       </template>
     </UCard>

@@ -18,24 +18,20 @@ async function handleLogout() {
 </script>
 
 <template>
-  <header class="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur-xl">
-    <UContainer class="flex items-center justify-between gap-4 px-4 py-4 md:px-6">
-      <NuxtLink to="/" class="flex items-center gap-3">
-        <div class="flex size-11 items-center justify-center rounded-2xl bg-teal-600 text-white shadow-lg shadow-teal-600/20">
-          <UIcon name="i-lucide-activity" class="size-5" />
+  <header class="topbar">
+    <UContainer class="topbar__inner">
+      <NuxtLink to="/" class="brand">
+        <div class="brand__mark">
+          <UIcon name="i-lucide-activity" class="brand__icon" />
         </div>
 
         <div>
-          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-700">
-            Workout Tracker
-          </p>
-          <p class="text-sm text-slate-500">
-            Calendar planning and strength trends
-          </p>
+          <p class="brand__eyebrow">Workout Tracker</p>
+          <p class="brand__text">Calendar planning and strength trends</p>
         </div>
       </NuxtLink>
 
-      <div class="hidden items-center gap-2 md:flex" v-if="auth.isAuthenticated">
+      <div v-if="auth.isAuthenticated" class="topbar__nav">
         <UButton
           v-for="item in navItems"
           :key="item.to"
@@ -48,12 +44,12 @@ async function handleLogout() {
         </UButton>
       </div>
 
-      <div class="hidden items-center gap-3 md:flex">
+      <div class="topbar__actions">
         <UBadge
           v-if="auth.user"
           color="neutral"
           variant="subtle"
-          class="rounded-full px-3 py-1.5"
+          class="pill-badge"
         >
           {{ auth.user.first_name || auth.user.username }}
         </UBadge>
@@ -74,7 +70,7 @@ async function handleLogout() {
       </div>
 
       <UButton
-        class="md:hidden"
+        class="topbar__menu"
         color="neutral"
         variant="ghost"
         icon="i-lucide-menu"
@@ -84,7 +80,7 @@ async function handleLogout() {
 
     <USlideover v-model:open="mobileOpen" title="Navigation">
       <template #body>
-        <div class="space-y-3">
+        <div class="stack-md">
           <UButton
             v-for="item in navItems"
             :key="item.to"

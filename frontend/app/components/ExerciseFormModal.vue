@@ -94,15 +94,15 @@ async function saveExercise() {
 <template>
   <UModal v-model:open="isOpen" :title="isEditing ? 'Edit exercise' : 'Create exercise'">
     <template #body>
-      <form class="space-y-4" @submit.prevent="saveExercise">
+      <form class="form-stack" @submit.prevent="saveExercise">
         <UFormField label="Exercise name" required>
-          <UInput v-model="state.name" class="w-full" placeholder="Incline dumbbell press" />
+          <UInput v-model="state.name" class="field-control" placeholder="Incline dumbbell press" />
         </UFormField>
 
         <UFormField label="Muscle group" required>
           <USelectMenu
             v-model="state.muscle_group_id"
-            class="w-full"
+            class="field-control"
             :items="muscleGroups"
             value-key="id"
             label-key="name"
@@ -111,7 +111,7 @@ async function saveExercise() {
         </UFormField>
 
         <UFormField label="Notes">
-          <UTextarea v-model="state.notes" class="w-full" :rows="4" placeholder="Any cues or setup reminders..." />
+          <UTextarea v-model="state.notes" class="field-control" :rows="4" placeholder="Any cues or setup reminders..." />
         </UFormField>
 
         <UCheckbox v-model="state.is_archived" label="Archive this exercise from quick selection" />
@@ -119,7 +119,7 @@ async function saveExercise() {
     </template>
 
     <template #footer>
-      <div class="flex w-full justify-end gap-3">
+      <div class="modal-actions">
         <UButton color="neutral" variant="ghost" @click="isOpen = false">
           Cancel
         </UButton>

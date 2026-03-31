@@ -16,8 +16,8 @@ onMounted(async () => {
 
       <NavBar />
 
-      <main class="pb-14">
-        <UContainer class="px-4 py-6 md:px-6 md:py-10">
+      <main class="app-main">
+        <UContainer class="app-container">
           <NuxtPage />
         </UContainer>
       </main>

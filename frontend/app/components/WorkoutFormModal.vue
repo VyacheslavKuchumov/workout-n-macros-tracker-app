@@ -193,36 +193,34 @@ async function saveWorkout() {
     v-model:open="isOpen"
     :title="workout ? 'Edit workout' : 'Plan workout'"
     :description="date"
-    :content="{ class: 'max-w-4xl' }"
+    :content="{ class: 'workout-modal' }"
   >
     <template #body>
-      <div class="space-y-5">
-        <div v-if="!activeExercises.length" class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
+      <div class="form-stack">
+        <div v-if="!activeExercises.length" class="warning-box">
           Create at least one exercise in your library before building a workout.
-          <NuxtLink to="/exercises" class="font-semibold underline decoration-2 underline-offset-4">
-            Open exercise library
-          </NuxtLink>
+          <NuxtLink to="/exercises" class="auth-link">Open exercise library</NuxtLink>
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="form-grid">
           <UFormField label="Workout title">
-            <UInput v-model="state.name" class="w-full" placeholder="Upper strength" />
+            <UInput v-model="state.name" class="field-control" placeholder="Upper strength" />
           </UFormField>
 
           <UFormField label="Focus">
-            <UInput v-model="state.focus" class="w-full" placeholder="Heavy bench + rows" />
+            <UInput v-model="state.focus" class="field-control" placeholder="Heavy bench + rows" />
           </UFormField>
         </div>
 
         <UFormField label="Notes">
-          <UTextarea v-model="state.notes" class="w-full" :rows="3" placeholder="Warm-up notes, equipment, how the session felt..." />
+          <UTextarea v-model="state.notes" class="field-control" :rows="3" placeholder="Warm-up notes, equipment, how the session felt..." />
         </UFormField>
 
-        <div class="space-y-4">
-          <div class="flex items-center justify-between gap-3">
-            <div>
-              <h3 class="text-lg font-semibold text-slate-900">Exercises and sets</h3>
-              <p class="text-sm text-slate-500">Log the order, reps, and weight for each movement.</p>
+        <div class="exercise-builder">
+          <div class="section-header">
+            <div class="stack-sm">
+              <h3 class="section-title">Exercises and sets</h3>
+              <p class="section-description">Log the order, reps, and weight for each movement.</p>
             </div>
 
             <UButton color="neutral" variant="outline" icon="i-lucide-plus" @click="addExerciseRow">
@@ -230,13 +228,13 @@ async function saveWorkout() {
             </UButton>
           </div>
 
-          <div v-for="(exercise, exerciseIndex) in state.exercises" :key="exerciseIndex" class="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-4">
-            <div class="mb-4 flex items-center justify-between gap-3">
-              <div class="flex-1">
-                <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Exercise {{ exerciseIndex + 1 }}</p>
+          <div v-for="(exercise, exerciseIndex) in state.exercises" :key="exerciseIndex" class="exercise-builder__item">
+            <div class="exercise-builder__header">
+              <div class="stack-sm">
+                <p class="muted-label">Exercise {{ exerciseIndex + 1 }}</p>
                 <USelectMenu
                   v-model="exercise.exercise_id"
-                  class="mt-2 w-full"
+                  class="field-control"
                   :items="activeExercises"
                   value-key="id"
                   label-key="name"
@@ -248,24 +246,24 @@ async function saveWorkout() {
             </div>
 
             <UFormField label="Exercise notes">
-              <UInput v-model="exercise.notes" class="w-full" placeholder="Tempo, pause, grip, setup..." />
+              <UInput v-model="exercise.notes" class="field-control" placeholder="Tempo, pause, grip, setup..." />
             </UFormField>
 
-            <div class="mt-4 space-y-3">
-              <div v-for="(workoutSet, setIndex) in exercise.sets" :key="setIndex" class="grid gap-3 rounded-2xl border border-white bg-white p-3 sm:grid-cols-[0.8fr_1fr_1fr_auto]">
+            <div class="set-builder">
+              <div v-for="(workoutSet, setIndex) in exercise.sets" :key="setIndex" class="set-builder__row">
                 <UFormField label="Set">
-                  <UInput :model-value="setIndex + 1" class="w-full" disabled />
+                  <UInput :model-value="setIndex + 1" class="field-control" disabled />
                 </UFormField>
 
                 <UFormField label="Reps">
-                  <UInput v-model="workoutSet.reps" class="w-full" type="number" min="1" step="1" />
+                  <UInput v-model="workoutSet.reps" class="field-control" type="number" min="1" step="1" />
                 </UFormField>
 
                 <UFormField label="Weight (kg)">
-                  <UInput v-model="workoutSet.weight_kg" class="w-full" type="number" min="0" step="0.5" />
+                  <UInput v-model="workoutSet.weight_kg" class="field-control" type="number" min="0" step="0.5" />
                 </UFormField>
 
-                <div class="flex items-end">
+                <div class="set-builder__remove">
                   <UButton color="error" variant="ghost" icon="i-lucide-x" @click="removeSet(exerciseIndex, setIndex)" />
                 </div>
               </div>
@@ -280,7 +278,7 @@ async function saveWorkout() {
     </template>
 
     <template #footer>
-      <div class="flex w-full justify-end gap-3">
+      <div class="modal-actions">
         <UButton color="neutral" variant="ghost" @click="isOpen = false">
           Cancel
         </UButton>

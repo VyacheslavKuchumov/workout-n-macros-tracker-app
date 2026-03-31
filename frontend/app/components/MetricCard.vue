@@ -10,15 +10,15 @@ defineProps<{
 
 <template>
   <UCard :class="['metric-card', tone ? `metric-card--${tone}` : 'metric-card--teal']">
-    <div class="flex items-start justify-between gap-4">
-      <div class="space-y-2">
-        <p class="text-xs uppercase tracking-[0.18em] text-slate-500">{{ title }}</p>
-        <p class="text-3xl font-semibold text-slate-950">{{ value }}</p>
-        <p class="text-sm text-slate-600">{{ description }}</p>
+    <div class="metric-card__body">
+      <div class="stack-sm">
+        <p class="metric-card__label">{{ title }}</p>
+        <p class="metric-card__value">{{ value }}</p>
+        <p class="metric-card__description">{{ description }}</p>
       </div>
 
       <div class="metric-card__icon">
-        <UIcon :name="icon" class="size-5" />
+        <UIcon :name="icon" class="metric-card__symbol" />
       </div>
     </div>
   </UCard>

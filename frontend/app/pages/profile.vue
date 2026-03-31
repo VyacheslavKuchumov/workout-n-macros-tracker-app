@@ -118,96 +118,93 @@ async function changePassword() {
 </script>
 
 <template>
-  <div class="space-y-8">
-    <UCard class="border-white/70 bg-white/90 shadow-2xl shadow-slate-900/5">
-      <div class="space-y-2">
-        <UBadge color="neutral" variant="soft" class="rounded-full px-3 py-1">
-          Profile settings
-        </UBadge>
-        <h1 class="text-3xl font-semibold text-slate-950">
-          Keep your account details and training goals current.
-        </h1>
-        <p class="max-w-2xl text-sm leading-6 text-slate-600">
+  <div class="page-stack">
+    <UCard class="page-card">
+      <div class="page-header">
+        <UBadge color="neutral" variant="soft" class="pill-badge">Profile settings</UBadge>
+        <h1 class="page-title">Keep your account details and training goals current.</h1>
+        <p class="page-description">
           Your goal weight and workout target help frame the dashboard while your account details stay available for future account management.
         </p>
       </div>
     </UCard>
 
-    <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-      <UCard class="border-white/70 bg-white/90 shadow-xl shadow-slate-900/5">
+    <div class="profile-grid profile-grid--sidebar">
+      <UCard class="page-card">
         <template #header>
-          <div>
-            <h2 class="text-2xl font-semibold text-slate-950">Account information</h2>
-            <p class="text-sm text-slate-500">These details are used across the app.</p>
+          <div class="page-header">
+            <h2 class="section-title">Account information</h2>
+            <p class="note-text">These details are used across the app.</p>
           </div>
         </template>
 
-        <form class="space-y-4" @submit.prevent="saveProfile">
-          <div class="grid gap-4 sm:grid-cols-2">
+        <form class="form-stack" @submit.prevent="saveProfile">
+          <div class="form-grid">
             <UFormField label="First name">
-              <UInput v-model="profileState.first_name" class="w-full" />
+              <UInput v-model="profileState.first_name" class="field-control" />
             </UFormField>
 
             <UFormField label="Last name">
-              <UInput v-model="profileState.last_name" class="w-full" />
+              <UInput v-model="profileState.last_name" class="field-control" />
             </UFormField>
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-2">
+          <div class="form-grid">
             <UFormField label="Username" required>
-              <UInput v-model="profileState.username" class="w-full" />
+              <UInput v-model="profileState.username" class="field-control" />
             </UFormField>
 
             <UFormField label="Email">
-              <UInput v-model="profileState.email" class="w-full" type="email" />
+              <UInput v-model="profileState.email" class="field-control" type="email" />
             </UFormField>
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-2">
+          <div class="form-grid">
             <UFormField label="Target body weight (kg)">
-              <UInput v-model="profileState.target_weight_kg" class="w-full" type="number" min="0" step="0.1" />
+              <UInput v-model="profileState.target_weight_kg" class="field-control" type="number" min="0" step="0.1" />
             </UFormField>
 
             <UFormField label="Weekly workout goal">
-              <UInput v-model="profileState.weekly_workout_goal" class="w-full" type="number" min="1" max="14" step="1" />
+              <UInput v-model="profileState.weekly_workout_goal" class="field-control" type="number" min="1" max="14" step="1" />
             </UFormField>
           </div>
 
           <UFormField label="Bio">
-            <UTextarea v-model="profileState.bio" class="w-full" :rows="5" placeholder="Training focus, current block, injury notes, motivation..." />
+            <UTextarea v-model="profileState.bio" class="field-control" :rows="5" placeholder="Training focus, current block, injury notes, motivation..." />
           </UFormField>
 
-          <UButton type="submit" color="primary" :loading="isSavingProfile">
+          <UButton type="submit" color="primary" class="fit-button" :loading="isSavingProfile">
             Save profile
           </UButton>
         </form>
       </UCard>
 
-      <UCard class="border-white/70 bg-white/90 shadow-xl shadow-slate-900/5">
+      <UCard class="page-card">
         <template #header>
-          <div>
-            <h2 class="text-2xl font-semibold text-slate-950">Change password</h2>
-            <p class="text-sm text-slate-500">Update your credentials when needed.</p>
+          <div class="page-header">
+            <h2 class="section-title">Change password</h2>
+            <p class="note-text">Update your credentials when needed.</p>
           </div>
         </template>
 
-        <form class="space-y-4" @submit.prevent="changePassword">
+        <form class="form-stack" @submit.prevent="changePassword">
           <UFormField label="Current password" required>
-            <UInput v-model="passwordState.current_password" class="w-full" type="password" />
+            <UInput v-model="passwordState.current_password" class="field-control" type="password" />
           </UFormField>
 
           <UFormField label="New password" required>
-            <UInput v-model="passwordState.new_password" class="w-full" type="password" />
+            <UInput v-model="passwordState.new_password" class="field-control" type="password" />
           </UFormField>
 
           <UFormField label="Confirm new password" required>
-            <UInput v-model="passwordState.confirm_password" class="w-full" type="password" />
+            <UInput v-model="passwordState.confirm_password" class="field-control" type="password" />
           </UFormField>
 
           <UButton
             type="submit"
             color="neutral"
             variant="outline"
+            class="fit-button"
             :loading="isSavingPassword"
             :disabled="!passwordState.current_password || passwordState.new_password.length < 8"
           >

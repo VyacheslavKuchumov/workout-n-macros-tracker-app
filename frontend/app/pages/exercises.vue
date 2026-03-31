@@ -78,26 +78,22 @@ async function toggleArchive(exercise: Exercise) {
 </script>
 
 <template>
-  <div class="space-y-8">
-    <UCard class="border-white/70 bg-white/90 shadow-2xl shadow-slate-900/5">
-      <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div class="space-y-2">
-          <UBadge color="primary" variant="soft" class="rounded-full px-3 py-1">
-            Exercise library
-          </UBadge>
-          <h1 class="text-3xl font-semibold text-slate-950">
-            Build the movements you want available in the workout planner.
-          </h1>
-          <p class="max-w-2xl text-sm leading-6 text-slate-600">
+  <div class="page-stack">
+    <UCard class="page-card">
+      <div class="section-header">
+        <div class="page-header">
+          <UBadge color="primary" variant="soft" class="pill-badge">Exercise library</UBadge>
+          <h1 class="page-title">Build the movements you want available in the workout planner.</h1>
+          <p class="page-description">
             Keep the library tidy by archiving exercises you no longer use while preserving old workout history.
           </p>
         </div>
 
-        <div class="flex flex-wrap gap-3">
+        <div class="button-row">
           <UInput
             v-model="search"
             icon="i-lucide-search"
-            class="w-full md:w-72"
+            class="toolbar-search"
             placeholder="Search exercises"
           />
           <UButton color="primary" icon="i-lucide-plus" @click="openCreate">
@@ -107,31 +103,29 @@ async function toggleArchive(exercise: Exercise) {
       </div>
     </UCard>
 
-    <UCard class="border-white/70 bg-white/90 shadow-xl shadow-slate-900/5">
+    <UCard class="page-card">
       <UTable :data="filteredExercises" :columns="columns" :loading="status === 'pending'">
         <template #name-cell="{ row }">
-          <div class="space-y-1">
-            <p class="font-semibold text-slate-950">{{ row.original.name }}</p>
-            <p class="max-w-md text-sm text-slate-500">
-              {{ row.original.notes || 'No notes saved for this exercise yet.' }}
-            </p>
+          <div class="table-cell">
+            <p class="table-cell__title">{{ row.original.name }}</p>
+            <p class="table-cell__note">{{ row.original.notes || 'No notes saved for this exercise yet.' }}</p>
           </div>
         </template>
 
         <template #muscle_group-cell="{ row }">
-          <UBadge color="neutral" variant="outline" class="rounded-full px-3 py-1">
+          <UBadge color="neutral" variant="outline" class="pill-badge">
             {{ row.original.muscle_group.name }}
           </UBadge>
         </template>
 
         <template #status-cell="{ row }">
-          <UBadge :color="row.original.is_archived ? 'warning' : 'success'" variant="soft" class="rounded-full px-3 py-1">
+          <UBadge :color="row.original.is_archived ? 'warning' : 'success'" variant="soft" class="pill-badge">
             {{ row.original.is_archived ? 'Archived' : 'Active' }}
           </UBadge>
         </template>
 
         <template #actions-cell="{ row }">
-          <div class="flex justify-end gap-2">
+          <div class="row-actions">
             <UButton color="neutral" variant="ghost" icon="i-lucide-pencil" @click="openEdit(row.original)" />
             <UButton
               color="neutral"
@@ -143,11 +137,9 @@ async function toggleArchive(exercise: Exercise) {
         </template>
 
         <template #empty>
-          <div class="py-10 text-center">
-            <p class="text-lg font-semibold text-slate-900">Your exercise library is empty.</p>
-            <p class="mt-2 text-sm text-slate-500">
-              Add a few lifts so the calendar planner has something to work with.
-            </p>
+          <div class="empty-state">
+            <p class="empty-state__title">Your exercise library is empty.</p>
+            <p class="note-text">Add a few lifts so the calendar planner has something to work with.</p>
           </div>
         </template>
       </UTable>

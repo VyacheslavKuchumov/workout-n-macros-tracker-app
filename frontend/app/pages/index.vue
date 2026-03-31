@@ -64,23 +64,19 @@ const exerciseVolumePoints = computed(() => dashboard.value.exercise_progress.se
 </script>
 
 <template>
-  <div class="space-y-8">
-    <UCard class="overflow-hidden border-white/70 bg-white/90 shadow-2xl shadow-slate-900/5">
-      <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <div class="space-y-5">
-          <div class="space-y-3">
-            <UBadge color="primary" variant="soft" class="rounded-full px-3 py-1">
-              Performance dashboard
-            </UBadge>
-            <h1 class="text-4xl font-semibold text-slate-950">
-              See training consistency, body weight, and load progression in one place.
-            </h1>
-            <p class="max-w-2xl text-sm leading-6 text-slate-600">
+  <div class="page-stack">
+    <UCard class="page-card page-card--hero">
+      <div class="intro-grid">
+        <div class="stack-lg">
+          <div class="page-header">
+            <UBadge color="primary" variant="soft" class="pill-badge">Performance dashboard</UBadge>
+            <h1 class="page-title">See training consistency, body weight, and load progression in one place.</h1>
+            <p class="page-description">
               The dashboard highlights recent sessions, movement-specific progress, and how your scale trend is moving alongside your lifting.
             </p>
           </div>
 
-          <div class="flex flex-wrap gap-3">
+          <div class="button-row">
             <UButton to="/workouts" color="primary" icon="i-lucide-calendar-plus">
               Plan next workout
             </UButton>
@@ -90,19 +86,17 @@ const exerciseVolumePoints = computed(() => dashboard.value.exercise_progress.se
           </div>
         </div>
 
-        <div class="rounded-[2rem] bg-slate-950 p-6 text-white">
-          <p class="text-xs uppercase tracking-[0.22em] text-teal-200">Current focus</p>
-          <h2 class="mt-3 text-3xl font-semibold">
-            {{ dashboard.exercise_progress.selected_exercise_name || 'Pick an exercise to inspect progress' }}
-          </h2>
-          <p class="mt-3 text-sm leading-6 text-slate-300">
+        <div class="feature-panel stack-md">
+          <p class="page-eyebrow">Current focus</p>
+          <h2 class="section-title">{{ dashboard.exercise_progress.selected_exercise_name || 'Pick an exercise to inspect progress' }}</h2>
+          <p class="section-description">
             Use the selector below to compare how your reps and top set load are trending over time.
           </p>
 
           <USelectMenu
             v-if="dashboard.exercise_options.length"
             v-model="selectedExerciseId"
-            class="mt-5 w-full"
+            class="field-control"
             color="neutral"
             variant="subtle"
             :items="dashboard.exercise_options"
@@ -114,7 +108,7 @@ const exerciseVolumePoints = computed(() => dashboard.value.exercise_progress.se
       </div>
     </UCard>
 
-    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="stats-grid">
       <MetricCard
         title="Total workouts"
         :value="dashboard.summary.total_workouts"
@@ -145,7 +139,7 @@ const exerciseVolumePoints = computed(() => dashboard.value.exercise_progress.se
       />
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="dashboard-grid">
       <TrendChart
         eyebrow="Body weight"
         title="Scale trend over the last 90 days"
@@ -165,7 +159,7 @@ const exerciseVolumePoints = computed(() => dashboard.value.exercise_progress.se
       />
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="dashboard-grid">
       <TrendChart
         eyebrow="Rep performance"
         :title="dashboard.exercise_progress.selected_exercise_name ? `${dashboard.exercise_progress.selected_exercise_name} best reps` : 'Best reps trend'"
@@ -184,14 +178,12 @@ const exerciseVolumePoints = computed(() => dashboard.value.exercise_progress.se
       />
     </div>
 
-    <UCard class="border-white/70 bg-white/90 shadow-xl shadow-slate-900/5">
+    <UCard class="page-card">
       <template #header>
-        <div class="flex items-center justify-between gap-3">
-          <div>
-            <h2 class="text-2xl font-semibold text-slate-950">Recent workouts</h2>
-            <p class="text-sm text-slate-500">
-              The last few sessions on your calendar.
-            </p>
+        <div class="section-header">
+          <div class="page-header">
+            <h2 class="section-title">Recent workouts</h2>
+            <p class="note-text">The last few sessions on your calendar.</p>
           </div>
 
           <UButton to="/workouts" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right">
@@ -200,55 +192,45 @@ const exerciseVolumePoints = computed(() => dashboard.value.exercise_progress.se
         </div>
       </template>
 
-      <div v-if="status === 'pending'" class="grid gap-4 lg:grid-cols-2">
-        <USkeleton v-for="index in 4" :key="index" class="h-32 rounded-3xl" />
+      <div v-if="status === 'pending'" class="dashboard-grid">
+        <USkeleton v-for="index in 4" :key="index" class="skeleton-card" />
       </div>
 
-      <div v-else-if="dashboard.recent_workouts.length" class="grid gap-4 lg:grid-cols-2">
-        <div
-          v-for="workout in dashboard.recent_workouts"
-          :key="workout.id"
-          class="rounded-3xl border border-slate-200/80 bg-slate-50/90 p-5"
-        >
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <p class="text-xs uppercase tracking-[0.18em] text-slate-400">{{ formatLongDate(workout.workout_date) }}</p>
-              <h3 class="mt-2 text-xl font-semibold text-slate-950">{{ workout.name || 'Workout session' }}</h3>
-              <p class="mt-1 text-sm text-slate-500">{{ workout.focus || 'General strength work' }}</p>
+      <div v-else-if="dashboard.recent_workouts.length" class="dashboard-grid">
+        <div v-for="workout in dashboard.recent_workouts" :key="workout.id" class="session-card">
+          <div class="session-header">
+            <div class="stack-sm">
+              <p class="muted-label">{{ formatLongDate(workout.workout_date) }}</p>
+              <h3 class="section-title">{{ workout.name || 'Workout session' }}</h3>
+              <p class="note-text">{{ workout.focus || 'General strength work' }}</p>
             </div>
 
-            <UBadge color="primary" variant="soft" class="rounded-full px-3 py-1">
+            <UBadge color="primary" variant="soft" class="pill-badge">
               {{ workout.total_sets }} sets
             </UBadge>
           </div>
 
-          <p class="mt-4 text-sm leading-6 text-slate-600">
-            {{ workout.notes || 'No extra notes for this session.' }}
-          </p>
+          <p class="section-description">{{ workout.notes || 'No extra notes for this session.' }}</p>
 
-          <div class="mt-4 flex flex-wrap gap-2">
+          <div class="button-row">
             <UBadge
               v-for="exercise in workout.exercises"
               :key="exercise.id"
               color="neutral"
               variant="outline"
-              class="rounded-full px-3 py-1"
+              class="pill-badge"
             >
               {{ exercise.exercise.name }}
             </UBadge>
           </div>
 
-          <div class="mt-4 text-sm font-medium text-slate-700">
-            Total volume: {{ formatVolume(workout.total_volume) }}
-          </div>
+          <p class="table-cell__title">Total volume: {{ formatVolume(workout.total_volume) }}</p>
         </div>
       </div>
 
-      <div v-else class="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
-        <p class="text-lg font-semibold text-slate-900">No workouts logged yet.</p>
-        <p class="mt-2 text-sm text-slate-500">
-          Open the calendar and plan your first session to unlock the dashboard trends.
-        </p>
+      <div v-else class="empty-state">
+        <p class="empty-state__title">No workouts logged yet.</p>
+        <p class="note-text">Open the calendar and plan your first session to unlock the dashboard trends.</p>
       </div>
     </UCard>
   </div>

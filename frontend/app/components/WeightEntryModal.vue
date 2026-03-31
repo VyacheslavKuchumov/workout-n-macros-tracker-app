@@ -86,25 +86,25 @@ async function saveEntry() {
 <template>
   <UModal v-model:open="isOpen" :title="entry ? 'Edit weight entry' : 'Log body weight'">
     <template #body>
-      <form class="space-y-4" @submit.prevent="saveEntry">
-        <div class="grid gap-4 sm:grid-cols-2">
+      <form class="form-stack" @submit.prevent="saveEntry">
+        <div class="form-grid">
           <UFormField label="Date" required>
-            <UInput v-model="state.entry_date" class="w-full" type="date" />
+            <UInput v-model="state.entry_date" class="field-control" type="date" />
           </UFormField>
 
           <UFormField label="Weight (kg)" required>
-            <UInput v-model="state.weight_kg" class="w-full" type="number" min="1" step="0.1" />
+            <UInput v-model="state.weight_kg" class="field-control" type="number" min="1" step="0.1" />
           </UFormField>
         </div>
 
         <UFormField label="Notes">
-          <UTextarea v-model="state.notes" class="w-full" :rows="4" placeholder="How did you feel, time of day, hydration, etc." />
+          <UTextarea v-model="state.notes" class="field-control" :rows="4" placeholder="How did you feel, time of day, hydration, etc." />
         </UFormField>
       </form>
     </template>
 
     <template #footer>
-      <div class="flex w-full justify-end gap-3">
+      <div class="modal-actions">
         <UButton color="neutral" variant="ghost" @click="isOpen = false">
           Cancel
         </UButton>

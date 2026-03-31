@@ -63,22 +63,22 @@ function formatValue(value: number | null) {
 </script>
 
 <template>
-  <UCard class="border-white/70 bg-white/90 shadow-xl shadow-slate-900/5">
-    <div class="space-y-4">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <p v-if="eyebrow" class="text-xs uppercase tracking-[0.18em] text-slate-500">{{ eyebrow }}</p>
-          <h3 class="text-xl font-semibold text-slate-950">{{ title }}</h3>
+  <UCard class="page-card">
+    <div class="stack-lg">
+      <div class="chart-card__top">
+        <div class="chart-card__header">
+          <p v-if="eyebrow" class="chart-card__eyebrow">{{ eyebrow }}</p>
+          <h3 class="chart-card__title">{{ title }}</h3>
         </div>
 
-        <div class="text-right">
-          <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Latest</p>
-          <p class="text-2xl font-semibold text-slate-950">{{ formatValue(latestValue) }}</p>
+        <div class="chart-card__latest">
+          <p class="chart-card__eyebrow">Latest</p>
+          <p class="chart-card__value">{{ formatValue(latestValue) }}</p>
         </div>
       </div>
 
-      <div v-if="normalizedPoints.length" class="space-y-4">
-        <svg viewBox="0 0 320 180" class="h-52 w-full">
+      <div v-if="normalizedPoints.length" class="chart-card__summary">
+        <svg viewBox="0 0 320 180" class="chart-card__svg">
           <defs>
             <linearGradient id="chartArea" x1="0" x2="0" y1="0" y2="1">
               <stop :stop-color="accent" stop-opacity="0.32" offset="0%" />
@@ -112,19 +112,15 @@ function formatValue(value: number | null) {
           />
         </svg>
 
-        <div class="grid gap-2 text-xs text-slate-500 sm:grid-cols-4">
-          <div
-            v-for="point in normalizedPoints.slice(-4)"
-            :key="point.label"
-            class="rounded-2xl border border-slate-200/80 bg-slate-50 px-3 py-2"
-          >
+        <div class="chart-card__summary-grid">
+          <div v-for="point in normalizedPoints.slice(-4)" :key="point.label" class="chart-card__summary-item">
             <p>{{ point.label }}</p>
-            <p class="mt-1 font-semibold text-slate-900">{{ formatValue(point.value) }}</p>
+            <p class="table-cell__title">{{ formatValue(point.value) }}</p>
           </div>
         </div>
       </div>
 
-      <div v-else class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+      <div v-else class="chart-card__empty">
         No data yet. Start logging entries and this chart will come to life.
       </div>
     </div>
