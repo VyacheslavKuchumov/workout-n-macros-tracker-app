@@ -5,15 +5,20 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev:host": "nuxt dev --host 0.0.0.0 --port 3000",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "lint": "eslint .",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/image": "^1.11.0",
     "@nuxt/scripts": "^0.11.10",
-    "@nuxt/test-utils": "^3.19.2",
     "@nuxt/ui": "^3.3.2",
     "@pinia/nuxt": "^0.11.2",
     "@unhead/vue": "^2.0.14",
@@ -25,5 +30,9 @@
     "valibot": "^1.1.0",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "vitest": "^3.2.4"
   }
 }

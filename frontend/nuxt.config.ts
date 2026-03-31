@@ -1,20 +1,17 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-
+  devtools: { enabled: process.env.NUXT_DEVTOOLS_ENABLED === 'true' },
   modules: [
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/scripts',
-    '@nuxt/test-utils',
     '@nuxt/ui',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate'
   ],
   runtimeConfig: {
     public: {
-      BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:8000'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api'
     }
   },
   css: ['~/assets/css/main.css']

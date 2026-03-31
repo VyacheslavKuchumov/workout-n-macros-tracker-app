@@ -1,33 +1,50 @@
-from django.shortcuts import render
-
-# Create your views here.
-
-from rest_framework.views import APIView
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework import status
-from django.contrib.auth import get_user_model
-from .serializers import UserSerializer, UserSignupSerializer
+from rest_framework.views import APIView
 
-User = get_user_model()
+from .models import UserProfile
+from .serializers import PasswordChangeSerializer, UserSerializer, UserSignupSerializer
+
+
+class SignupView(generics.CreateAPIView):
+    serializer_class = UserSignupSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+
 
 class UserDetailView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+        UserProfile.objects.get_or_create(user=request.user)
+        return Response(UserSerializer(request.user).data)
+
+    def patch(self, request):
+        serializer = UserSerializer(
+            request.user,
+            data=request.data,
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        request.user.refresh_from_db()
+        return Response(UserSerializer(request.user).data)
 
 
-class SignupView(APIView):
-    permission_classes = [AllowAny]  # Allow anyone to register
+class PasswordChangeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        serializer = UserSignupSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response(
-                {"id": user.id, "username": user.username},
-                status=status.HTTP_201_CREATED
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = PasswordChangeSerializer(
+            data=request.data,
+            context={"request": request},
+        )
+        serializer.is_valid(raise_exception=True)
+        request.user.set_password(serializer.validated_data["new_password"])
+        request.user.save()
+        return Response({"detail": "Password updated successfully."})

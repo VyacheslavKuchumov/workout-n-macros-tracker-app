@@ -1,76 +1,128 @@
+<script setup lang="ts">
+const auth = useAuthStore()
+const route = useRoute()
+const mobileOpen = ref(false)
+
+const navItems = computed(() => [
+  { label: 'Dashboard', to: '/', icon: 'i-lucide-chart-column' },
+  { label: 'Workouts', to: '/workouts', icon: 'i-lucide-calendar-days' },
+  { label: 'Exercises', to: '/exercises', icon: 'i-lucide-dumbbell' },
+  { label: 'Weight', to: '/weight', icon: 'i-lucide-scale' },
+  { label: 'Profile', to: '/profile', icon: 'i-lucide-user-round' }
+])
+
+async function handleLogout() {
+  mobileOpen.value = false
+  await auth.logout()
+}
+</script>
+
 <template>
-  <header class="border-b border-gray-200 shadow-sm :dark:border-gray-700">
-    <nav class="container mx-auto flex items-center justify-between py-4 px-6">
-      <h1 class="text-xl font-bold">🏋️ Workout Tracker</h1>
+  <header class="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur-xl">
+    <UContainer class="flex items-center justify-between gap-4 px-4 py-4 md:px-6">
+      <NuxtLink to="/" class="flex items-center gap-3">
+        <div class="flex size-11 items-center justify-center rounded-2xl bg-teal-600 text-white shadow-lg shadow-teal-600/20">
+          <UIcon name="i-lucide-activity" class="size-5" />
+        </div>
 
-      <!-- Slideover Menu -->
-      <USlideover title="Меню" close-icon="i-lucide-arrow-right">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-700">
+            Workout Tracker
+          </p>
+          <p class="text-sm text-slate-500">
+            Calendar planning and strength trends
+          </p>
+        </div>
+      </NuxtLink>
+
+      <div class="hidden items-center gap-2 md:flex" v-if="auth.isAuthenticated">
         <UButton
-          icon="i-lucide-menu"
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
           color="neutral"
-          variant="ghost"
-        />
-        <template #body>
-          <UNavigationMenu
-            orientation="vertical"
-            
-            :items="items"
-          >
-          <template #item="{ item }">
-            <!-- Normal navigation item -->
-            <UButton
-              v-if="item.to"
-              :icon="item.icon"
-              variant="ghost"
-              color="neutral"
-              :to="item.to"
-              class="w-full justify-start"
-            >
-              {{ item.label }}
-            </UButton>
+          :variant="route.path === item.to ? 'soft' : 'ghost'"
+          :icon="item.icon"
+        >
+          {{ item.label }}
+        </UButton>
+      </div>
 
-            <!-- Logout special item -->
-            <UButton
-              v-else-if="item.action === 'logout'"
-              :icon="item.icon"
-              variant="ghost"
-              color="error"
-              class="w-full justify-start"
-              @click="auth.logout"
-            >
-              {{ item.label }}
-            </UButton>
-          </template>
-        </UNavigationMenu>
-        </template>
-      </USlideover>
-    </nav>
+      <div class="hidden items-center gap-3 md:flex">
+        <UBadge
+          v-if="auth.user"
+          color="neutral"
+          variant="subtle"
+          class="rounded-full px-3 py-1.5"
+        >
+          {{ auth.user.first_name || auth.user.username }}
+        </UBadge>
+
+        <UButton
+          v-if="auth.isAuthenticated"
+          color="neutral"
+          variant="outline"
+          icon="i-lucide-log-out"
+          @click="handleLogout"
+        >
+          Log out
+        </UButton>
+
+        <UButton v-else to="/login" color="primary" trailing-icon="i-lucide-arrow-right">
+          Sign in
+        </UButton>
+      </div>
+
+      <UButton
+        class="md:hidden"
+        color="neutral"
+        variant="ghost"
+        icon="i-lucide-menu"
+        @click="mobileOpen = true"
+      />
+    </UContainer>
+
+    <USlideover v-model:open="mobileOpen" title="Navigation">
+      <template #body>
+        <div class="space-y-3">
+          <UButton
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            block
+            color="neutral"
+            :variant="route.path === item.to ? 'soft' : 'ghost'"
+            :icon="item.icon"
+            @click="mobileOpen = false"
+          >
+            {{ item.label }}
+          </UButton>
+
+          <USeparator />
+
+          <UButton
+            v-if="auth.isAuthenticated"
+            block
+            color="error"
+            variant="soft"
+            icon="i-lucide-log-out"
+            @click="handleLogout"
+          >
+            Log out
+          </UButton>
+
+          <UButton
+            v-else
+            to="/login"
+            block
+            color="primary"
+            trailing-icon="i-lucide-arrow-right"
+            @click="mobileOpen = false"
+          >
+            Sign in
+          </UButton>
+        </div>
+      </template>
+    </USlideover>
   </header>
 </template>
-
-<script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
-
-const auth = useAuthStore()
-
-// Build navigation items dynamically depending on authentication
-const items = computed<NavigationMenuItem[][]>(() => {
-  if (auth.isAuthenticated) {
-    return [[
-      { label: 'Главная', icon: 'i-lucide-home', to: '/' },
-      { label: 'Тренировки', icon: 'i-lucide-dumbbell', to: '/workouts' },
-      { label: 'Упражнения', icon: 'i-lucide-list', to: '/exercises' },
-      { label: 'Профиль', icon: 'i-lucide-user', to: '/profile' },
-      {
-        label: 'Выйти',
-        icon: 'i-lucide-log-out',
-        action: 'logout',
-      }
-    ]]
-  } else {
-    return [[
-      { label: 'Войти', icon: 'i-lucide-log-in', to: '/login' }
-    ]]
-  }
-})
-</script>

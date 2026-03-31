@@ -1,22 +1,16 @@
-# urls.py
-from django.urls import path
-from .views import (
-    MuscleGroupList, MuscleGroupDetail,
-    ExerciseList, ExerciseDetail, WorkoutExerciseDetail,
-    WorkoutList, WorkoutDetail,
-    WorkoutExerciseList
-)
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
+from .views import BodyWeightEntryViewSet, DashboardView, ExerciseViewSet, MuscleGroupViewSet, WorkoutViewSet
+
+
+router = DefaultRouter()
+router.register("muscle-groups", MuscleGroupViewSet, basename="muscle-group")
+router.register("exercises", ExerciseViewSet, basename="exercise")
+router.register("workouts", WorkoutViewSet, basename="workout")
+router.register("body-weights", BodyWeightEntryViewSet, basename="body-weight")
 
 urlpatterns = [
-    path('muscle-groups/', MuscleGroupList.as_view(), name='muscle-group-list'),
-    path('muscle-groups/<int:pk>/', MuscleGroupDetail.as_view(), name='muscle-group-detail'),
-    
-    path('exercises/', ExerciseList.as_view(), name='exercise-list'),
-    path('exercises/<int:pk>/', ExerciseDetail.as_view(), name='exercise-detail'),
-    
-    path('workouts/', WorkoutList.as_view(), name='workout-list'),
-    path('workouts/<int:pk>/', WorkoutDetail.as_view(), name='workout-detail'),
-    
-    path('workout-exercises/', WorkoutExerciseList.as_view(), name='workout-exercise-list'),
-    path('workout-exercises/<int:pk>/', WorkoutExerciseDetail.as_view(), name='workout-exercise-detail'),
+    path("dashboard/", DashboardView.as_view(), name="dashboard"),
+    path("", include(router.urls)),
 ]

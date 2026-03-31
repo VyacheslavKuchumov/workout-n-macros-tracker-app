@@ -1,2 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+:root {
+  --app-bg: #f5f7f2;
+  --app-surface: rgba(255, 255, 255, 0.9);
+  --app-ink: #0f172a;
+  --app-muted: #475569;
+  --app-accent: #0f766e;
+  --app-accent-soft: #ccfbf1;
+}
+
+html {
+  background: var(--app-bg);
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  color: var(--app-ink);
+  background:
+    radial-gradient(circle at top left, rgba(13, 148, 136, 0.18), transparent 24rem),
+    radial-gradient(circle at top right, rgba(217, 119, 6, 0.16), transparent 28rem),
+    linear-gradient(180deg, #f8fbf7 0%, #edf2ec 100%);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+.app-shell__glow {
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.5;
+}
+
+.app-shell__glow--left {
+  top: 7rem;
+  left: -5rem;
+  background: rgba(20, 184, 166, 0.22);
+}
+
+.app-shell__glow--right {
+  top: 15rem;
+  right: -4rem;
+  background: rgba(245, 158, 11, 0.18);
+}
+
+.metric-card {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06);
+}
+
+.metric-card__icon {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+}
+
+.metric-card--teal .metric-card__icon {
+  background: rgba(20, 184, 166, 0.14);
+  color: #0f766e;
+}
+
+.metric-card--amber .metric-card__icon {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+}
+
+.metric-card--sky .metric-card__icon {
+  background: rgba(14, 165, 233, 0.14);
+  color: #0369a1;
+}
+
+.metric-card--rose .metric-card__icon {
+  background: rgba(244, 63, 94, 0.14);
+  color: #be123c;
+}
+
+.calendar-cell {
+  min-height: 8.5rem;
+  border-radius: 1.5rem;
+  padding: 0.9rem;
+  text-align: left;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.calendar-cell:hover {
+  transform: translateY(-2px);
+}
+
+.calendar-cell--in-month {
+  color: #0f172a;
+}
+
+.calendar-cell--out-month {
+  color: #94a3b8;
+  background: rgba(241, 245, 249, 0.7);
+}
+
+.calendar-cell--selected {
+  border-color: rgba(15, 118, 110, 0.4);
+  background: linear-gradient(180deg, rgba(204, 251, 241, 0.9) 0%, rgba(240, 253, 250, 0.95) 100%);
+}
+
+.calendar-cell--planned {
+  border-color: rgba(15, 118, 110, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.06);
+}
+
+.calendar-cell--today .calendar-cell__day {
+  background: #0f172a;
+  color: white;
+}
+
+.calendar-cell__day {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.calendar-cell__label {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: #0f172a;
+}
+
+.calendar-cell__empty {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
